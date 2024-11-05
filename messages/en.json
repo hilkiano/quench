@@ -1,0 +1,11 @@
+{
+    "Common": {
+        "header": "Testing"
+    },
+    "Homepage": {
+        "Meta": {
+            "title": "Quench App",
+            "description": "Search any coffee recipes or share your own creation."
+        }
+    }
+}

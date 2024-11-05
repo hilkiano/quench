@@ -1,0 +1,11 @@
+{
+    "Common": {
+        "header": "Test"
+    },
+    "Homepage": {
+        "Meta": {
+            "title": "Quench App",
+            "description": "Cari resep kopi apa pun atau bagikan kreasi Anda sendiri."
+        }
+    }
+}
