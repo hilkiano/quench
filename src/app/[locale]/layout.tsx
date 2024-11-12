@@ -1,22 +1,20 @@
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import QueryProvider from "@/libs/queryProvider";
+import QueryProvider from "@/libs/query.provider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { theme } from "@/styles/theme";
 import "@/styles/globals.css";
 import "@mantine/core/styles.layer.css";
+import "@mantine/dropzone/styles.css";
+import "@mantine/carousel/styles.css";
 import "@/styles/layout.css";
 import "@/styles/globals.css";
 import { mulishFont } from "@/styles/fonts";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Quench",
-  description: "Find coffee recipes with ease.",
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
+import UserProvider from "@/libs/user.provider";
+import { ModalsProvider } from "@mantine/modals";
+import { headers } from "next/headers";
+import { Toaster } from "sonner";
 
 export default async function RootLayout({
   children,
@@ -25,9 +23,10 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as "en" | "id")) {
     notFound();
   }
+  const { userData } = getInitialValue();
 
   return (
     <html lang={locale}>
@@ -39,10 +38,30 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${mulishFont.variable} font-sans antialiased`}>
+        <Toaster />
         <QueryProvider>
-          <MantineProvider theme={theme}>{children}</MantineProvider>
+          <NuqsAdapter>
+            <UserProvider value={userData}>
+              <MantineProvider theme={theme}>
+                <ModalsProvider>{children}</ModalsProvider>
+              </MantineProvider>
+            </UserProvider>
+          </NuqsAdapter>
         </QueryProvider>
       </body>
     </html>
   );
+}
+
+function getInitialValue() {
+  const headersList = headers();
+  let userData: Userdata | null = null;
+
+  if (headersList.has("x-userdata")) {
+    const userHeaderData = headersList.get("x-userdata");
+    const parsedUserData = JSON.parse(userHeaderData ? userHeaderData : "");
+    userData = parsedUserData;
+  }
+
+  return { userData };
 }

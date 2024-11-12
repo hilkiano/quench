@@ -1,11 +1,93 @@
 {
-    "Common": {
-        "header": "Testing"
+  "Common": {
+    "header": "Testing",
+    "auto_label": "Auto",
+    "light_label": "Light",
+    "dark_label": "Dark",
+    "en_label": "English",
+    "id_label": "Indonesian",
+    "Unit": {
+      "gram": "g",
+      "mililiter": "ml",
+      "kilogram": "kg",
+      "liter": "L",
+      "centimeter": "cm",
+      "teaspoon": "tsp",
+      "tablespoon": "tbsp",
+      "unknown": "UNKNOWN"
     },
-    "Homepage": {
-        "Meta": {
-            "title": "Quench App",
-            "description": "Search any coffee recipes or share your own creation."
-        }
+    "menu_settings": "Settings",
+    "menu_logout": "Logout",
+    "are_you_sure": "Are you sure?",
+    "Button": {
+      "yes": "Yes",
+      "no": "No",
+      "go_back": "Go back"
+    },
+    "Error": {
+      "403_title": "403 Forbidden",
+      "403_body": "You don't have the requirements to access this page."
+    },
+    "Toast": {
+      "loading": "Please wait...",
+      "error": "Error encountered: {message}"
     }
+  },
+  "Homepage": {
+    "Meta": {
+      "title": "Quench App",
+      "description": "Search any coffee recipes or share your own creation."
+    },
+    "search_placeholder": "What would you like to brew today?"
+  },
+  "Create": {
+    "Meta": {
+      "title": "Quench App | Make new recipe",
+      "description": "Share your own recipe to the world."
+    },
+    "title": "Make new recipe"
+  },
+  "Settings": {
+    "Meta": {
+      "title": "Quench App | Settings",
+      "description": "Change application preference as you see fit."
+    },
+    "title": "Settings",
+    "label_application": "Application",
+    "items_title_theme": "Theme",
+    "items_desc_theme": "Change the application theme",
+    "items_title_language": "Language",
+    "items_desc_language": "Change the application language",
+    "label_session": "Session",
+    "items_title_logout": "Logout",
+    "items_desc_logout": "End your session and use application as a guest",
+    "modal_logout_body": "Are you sure?"
+  },
+  "Form": {
+    "Validation": {
+      "required": "Please fill this field.",
+      "min": "Minimum characters required is {min}.",
+      "max": "Maximum characters allowed is {max}."
+    },
+    "Recipe": {
+      "title_label": "What is your recipe called?",
+      "title_description": "Description",
+      "title_ingredients": "Ingredients",
+      "modal_title_ingredient": "Add ingredient",
+      "no_data": "Please add some {data}",
+      "title_name": "Name",
+      "title_quantity": "Quantity",
+      "title_unit": "Unit",
+      "ingredient_unit": "{quantity} {unit}",
+      "modal_title_update_ingredient": "Update ingredient",
+      "title_steps": "Steps",
+      "modal_title_step": "Add step",
+      "modal_title_update_step": "Update step",
+      "title_step": "Explain the details what needs to be done",
+      "step": "Step #{order}",
+      "success_added": "Recipe <emp>{name}</emp> was sent successfully. Your recipe will appear on the home screen after getting approved by admin."
+    },
+    "button_draft": "Save as draft",
+    "button_submit": "Submit"
+  }
 }

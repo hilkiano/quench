@@ -1,11 +1,93 @@
 {
-    "Common": {
-        "header": "Test"
+  "Common": {
+    "header": "Test",
+    "auto_label": "Auto",
+    "light_label": "Terang",
+    "dark_label": "Gelap",
+    "en_label": "Bahasa Inggris",
+    "id_label": "Bahasa Indonesia",
+    "Unit": {
+      "gram": "g",
+      "mililiter": "ml",
+      "kilogram": "kg",
+      "liter": "L",
+      "centimeter": "cm",
+      "teaspoon": "sdt",
+      "tablespoon": "sdm",
+      "unknown": "UNKNOWN"
     },
-    "Homepage": {
-        "Meta": {
-            "title": "Quench App",
-            "description": "Cari resep kopi apa pun atau bagikan kreasi Anda sendiri."
-        }
+    "menu_settings": "Pengaturan",
+    "menu_logout": "Keluar",
+    "are_you_sure": "Apakah Anda yakin?",
+    "Button": {
+      "yes": "Ya",
+      "no": "Tidak",
+      "go_back": "Kembali"
+    },
+    "Error": {
+      "403_title": "403 Forbidden",
+      "403_body": "Anda tidak memiliki persyaratan untuk mengakses halaman ini."
+    },
+    "Toast": {
+      "loading": "Harap menunggu...",
+      "error": "Terjadi kesalahan: {message}"
     }
+  },
+  "Homepage": {
+    "Meta": {
+      "title": "Quench App",
+      "description": "Cari resep kopi apa pun atau bagikan kreasi Anda sendiri."
+    },
+    "search_placeholder": "Apa yang mau Anda buat hari ini?"
+  },
+  "Create": {
+    "Meta": {
+      "title": "Quench App | Buat resep baru",
+      "description": "Bagikan resep buatan Anda kepada dunia."
+    },
+    "title": "Buat resep baru"
+  },
+  "Settings": {
+    "Meta": {
+      "title": "Quench App | Pengaturan",
+      "description": "Mengubah pengaturan aplikasi sesuai keinginan Anda."
+    },
+    "title": "Pengaturan",
+    "label_application": "Aplikasi",
+    "items_title_theme": "Tema",
+    "items_desc_theme": "Ubah tema aplikasi",
+    "items_title_language": "Bahasa",
+    "items_desc_language": "Ubah bahasa aplikasi",
+    "label_session": "Sesi",
+    "items_title_logout": "Keluar",
+    "items_desc_logout": "Akhiri sesi Anda dan gunakan aplikasi sebagai tamu",
+    "modal_logout_body": "Apa kamu yakin?"
+  },
+  "Form": {
+    "Validation": {
+      "required": "Mohon isi kolom ini.",
+      "min": "Minimum karakter yang diperlukan adalah {min}.",
+      "max": "Maksimum karakter yang diperbolehkan adalah {max}."
+    },
+    "Recipe": {
+      "title_label": "Apa nama resep Anda?",
+      "title_description": "Deskripsi",
+      "title_ingredients": "Bahan-bahan",
+      "modal_title_ingredient": "Tambahkan bahan",
+      "no_data": "Mohon tambahkan {data}",
+      "title_name": "Nama",
+      "title_quantity": "Kuantitas",
+      "title_unit": "Satuan",
+      "ingredient_unit": "{quantity} {unit}",
+      "modal_title_update_ingredient": "Perbarui bahan",
+      "title_steps": "Langkah-langkah",
+      "modal_title_step": "Tambahkan langkah",
+      "modal_title_update_step": "Perbarui langkah",
+      "title_step": "Jelaskan secara detail apa yang perlu dilakukan",
+      "step": "Langkah #{order}",
+      "success_added": "Resep <emp>{name}</emp> berhasil dikirim. Resep akan tampil di halaman utama setelah disetujui admin."
+    },
+    "button_draft": "Simpan sebagai draft",
+    "button_submit": "Kirim"
+  }
 }

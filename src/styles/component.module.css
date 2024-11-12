@@ -1,0 +1,27 @@
+.active {
+  transition: transform 50ms ease-in-out;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* TEXT INPUT */
+.textInput_input {
+  @apply font-sans border-2;
+}
+
+/* NUMBER INPUT */
+.numberInput_input {
+  @apply font-sans border-2;
+}
+
+/* SELECT */
+.select_input {
+  @apply font-sans border-2;
+}
+
+/* TEXTAREA */
+.textarea_input {
+  @apply font-sans border-2;
+}

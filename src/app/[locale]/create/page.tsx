@@ -1,14 +1,14 @@
-import HomepageContainer from "@/components/homepage/HomepageContainer";
-import { getList } from "@/services/data.service";
-import { recipeKeys } from "@/utils";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import pick from "lodash/pick";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import pick from "lodash/pick";
+import CreateContainer from "@/components/create/CreateContainer";
+import { unitKeys } from "@/utils";
+import { getComboboxData } from "@/services/data.service";
 
 export async function generateMetadata({
   params: { locale },
@@ -17,7 +17,7 @@ export async function generateMetadata({
 }) {
   const t = await getTranslations({
     locale,
-    namespace: "Homepage",
+    namespace: "Create",
   });
 
   return {
@@ -26,32 +26,35 @@ export async function generateMetadata({
   };
 }
 
-export default async function Homepage() {
+export default async function Create() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: recipeKeys.lists(),
+    queryKey: unitKeys.all,
     queryFn: () =>
-      getList({
-        model: "Recipe",
-        limit: "20",
+      getComboboxData({
+        model: "Unit",
+        label: "name",
+        value: "id",
       }),
   });
 
-  return <HomepageContent queryClient={queryClient} />;
+  return <CreateContent queryClient={queryClient} />;
 }
 
-type THomepageContent = {
+type TCreateContent = {
   queryClient: QueryClient;
 };
 
-function HomepageContent({ queryClient }: THomepageContent) {
+function CreateContent({ queryClient }: TCreateContent) {
   const messages = useMessages();
 
   return (
-    <NextIntlClientProvider messages={pick(messages, ["Common", "Homepage"])}>
+    <NextIntlClientProvider
+      messages={pick(messages, ["Common", "Create", "Form"])}
+    >
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <HomepageContainer />
+        <CreateContainer />
       </HydrationBoundary>
     </NextIntlClientProvider>
   );

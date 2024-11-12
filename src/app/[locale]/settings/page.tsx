@@ -1,14 +1,12 @@
-import HomepageContainer from "@/components/homepage/HomepageContainer";
-import { getList } from "@/services/data.service";
-import { recipeKeys } from "@/utils";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import pick from "lodash/pick";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import pick from "lodash/pick";
+import SettingsContainer from "@/components/settings/SettingsContainer";
 
 export async function generateMetadata({
   params: { locale },
@@ -17,7 +15,7 @@ export async function generateMetadata({
 }) {
   const t = await getTranslations({
     locale,
-    namespace: "Homepage",
+    namespace: "Settings",
   });
 
   return {
@@ -26,32 +24,23 @@ export async function generateMetadata({
   };
 }
 
-export default async function Homepage() {
+export default async function Create() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: recipeKeys.lists(),
-    queryFn: () =>
-      getList({
-        model: "Recipe",
-        limit: "20",
-      }),
-  });
-
-  return <HomepageContent queryClient={queryClient} />;
+  return <CreateContent queryClient={queryClient} />;
 }
 
-type THomepageContent = {
+type TCreateContent = {
   queryClient: QueryClient;
 };
 
-function HomepageContent({ queryClient }: THomepageContent) {
+function CreateContent({ queryClient }: TCreateContent) {
   const messages = useMessages();
 
   return (
-    <NextIntlClientProvider messages={pick(messages, ["Common", "Homepage"])}>
+    <NextIntlClientProvider messages={pick(messages, ["Common", "Settings"])}>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <HomepageContainer />
+        <SettingsContainer className="flex flex-col md:flex-row gap-4 justify-between" />
       </HydrationBoundary>
     </NextIntlClientProvider>
   );
