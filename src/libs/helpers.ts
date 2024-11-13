@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-table";
 
 export function cleanData<T>(data: T) {
-  for (let key in data) {
+  for (const key in data) {
     if (data[key] === undefined) {
       delete data[key];
     }

@@ -19,7 +19,7 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
   ({ ...props }, ref) => {
     return (
       <Box
-        className={cn("flex flex-col gap-4 mt-4 sm:mt-8", props.className)}
+        className={cn("flex flex-col gap-4", props.className)}
         {...props}
         ref={ref}
       >

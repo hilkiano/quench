@@ -29,14 +29,14 @@ export async function generateMetadata({
 export default async function Homepage() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: recipeKeys.lists(),
-    queryFn: () =>
-      getList({
-        model: "Recipe",
-        limit: "20",
-      }),
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: recipeKeys.lists(),
+  //   queryFn: () =>
+  //     getList({
+  //       model: "Recipe",
+  //       limit: "20",
+  //     }),
+  // });
 
   return <HomepageContent queryClient={queryClient} />;
 }

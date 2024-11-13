@@ -18,9 +18,9 @@ export const recipeKeys = {
   all: ["recipe"] as const,
   lists: () => [...recipeKeys.all, "list"] as const,
   list: (filters: {
-    pagination: PaginationState;
-    globalFilter: string;
-    globalFilterColumns: string;
+    pagination?: PaginationState;
+    globalFilter?: string;
+    globalFilterColumns?: string;
   }) => [...recipeKeys.lists(), { ...filters }] as const,
   details: () => [...recipeKeys.all, "detail"] as const,
   detail: (id: number) => [...recipeKeys.details(), id] as const,

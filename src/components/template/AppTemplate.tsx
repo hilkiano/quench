@@ -73,13 +73,7 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
         size="xl"
         variant="transparent"
         aria-label="Go back"
-        onClick={() => {
-          if (pathname.split("/").length > 2) {
-            router.back();
-          } else {
-            router.push("/");
-          }
-        }}
+        onClick={() => router.back()}
       >
         <IconArrowLeft size={32} />
       </ActionIcon>
@@ -88,11 +82,7 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
     const pinned = useHeadroom({ fixedAt: 120 });
 
     return (
-      <AppShell
-        header={{ height: 60, collapsed: !pinned, offset: false }}
-        {...props}
-        ref={ref}
-      >
+      <AppShell header={{ height: 60, offset: false }} {...props} ref={ref}>
         <AppShell.Header
           withBorder={false}
           className="flex justify-between items-center max-w-[1000px] mr-auto ml-auto px-4"

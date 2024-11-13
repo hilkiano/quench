@@ -9,9 +9,7 @@ export async function GET(request: NextRequest) {
   const loginSession = cookieStore.get("login_session");
   const response = await axios
     .get(
-      `${process.env.NEXT_PUBLIC_API_URL}data/list${
-        searchParams ? `?${searchParams.toString()}` : "/"
-      }`,
+      `${process.env.NEXT_PUBLIC_API_URL}data/list?${searchParams.toString()}`,
       {
         headers: {
           "x-app-locale": lang ? lang.value : "id",
