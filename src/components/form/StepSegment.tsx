@@ -52,21 +52,26 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
 
     return (
       <>
-        <Box className="flex flex-col gap-4" ref={ref}>
-          <div className="flex gap-4 items-center">
-            <p className="m-0 text-xl xs:text-2xl font-semibold">
-              {t("Recipe.title_steps")}
-            </p>
-            <ActionIcon
-              variant="gradient"
-              radius="xl"
-              aria-label="Add step"
-              onClick={open}
-            >
-              <IconPlus />
-            </ActionIcon>
-          </div>
-          <Paper withBorder radius="md" {...props}>
+        <Box className="flex flex-col mt-2" ref={ref}>
+          <Paper {...props}>
+            <div className="flex justify-between items-center">
+              <div className="flex gap-2 items-center">
+                <Text className="text-lg font-medium">
+                  {t("Recipe.title_steps")}
+                </Text>
+                <Badge size="lg" circle>
+                  {stepsArray.fields.length}
+                </Badge>
+              </div>
+              <ActionIcon
+                variant="gradient"
+                radius="xl"
+                aria-label="Add step"
+                onClick={open}
+              >
+                <IconPlus />
+              </ActionIcon>
+            </div>
             {stepsArray.fields.length > 0 ? (
               <DragDropContext
                 onDragEnd={({ destination, source }) => {
@@ -99,9 +104,9 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
                           >
                             {(provided, snapshot) => (
                               <Card
-                                className={`xs:min-w-[200px] xs:w-[200px] rounded-lg ${
+                                className={`xs:min-w-[200px] xs:w-[200px] rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 backdrop-blur-lg ${
                                   snapshot.isDragging
-                                    ? "drop-shadow-2xl"
+                                    ? "drop-shadow-2xl border-2 border-solid border-[var(--mantine-primary-color-filled)]"
                                     : "drop-shadow-md"
                                 }`}
                                 ref={provided.innerRef}
@@ -110,7 +115,7 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
                                 <Badge
                                   variant="gradient"
                                   size="lg"
-                                  className={`absolute top-2 ${
+                                  className={`absolute top-2 font-mulish ${
                                     isMobile ? "left-11" : "left-2"
                                   }`}
                                 >
@@ -169,7 +174,6 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
               </DragDropContext>
             ) : (
               <Center className="flex flex-col gap-2 opacity-45 justify-center h-full">
-                <IconMoodEmptyFilled size={44} />
                 {t("Recipe.no_data", {
                   data: t("Recipe.title_steps").toLowerCase(),
                 })}

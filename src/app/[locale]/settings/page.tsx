@@ -40,7 +40,7 @@ function CreateContent({ queryClient }: TCreateContent) {
   return (
     <NextIntlClientProvider messages={pick(messages, ["Common", "Settings"])}>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <SettingsContainer className="flex flex-col md:flex-row gap-4 justify-between" />
+        <SettingsContainer className="flex flex-col md:flex-row gap-6" />
       </HydrationBoundary>
     </NextIntlClientProvider>
   );

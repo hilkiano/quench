@@ -8,20 +8,46 @@
 
 /* TEXT INPUT */
 .textInput_input {
-  @apply font-sans border-2;
+  @apply font-sans border-2 rounded-xl;
 }
 
 /* NUMBER INPUT */
 .numberInput_input {
-  @apply font-sans border-2;
+  @apply font-sans border-2 rounded-xl;
 }
 
 /* SELECT */
 .select_input {
-  @apply font-sans border-2;
+  @apply font-sans border-2 rounded-xl;
+}
+
+.select_dropdown {
+  @apply rounded-xl;
+}
+
+.select_option {
+  @apply rounded-lg;
 }
 
 /* TEXTAREA */
 .textarea_input {
-  @apply font-sans border-2;
+  @apply font-sans border-2 rounded-xl;
+}
+
+/* BUTTON */
+.button_label {
+  @apply font-mulish font-black uppercase opacity-80;
+}
+
+/* MODAL */
+.modal_header {
+  @apply bg-transparent;
+}
+
+.modal_content {
+  @apply data-[full-screen=true]:rounded-none rounded-2xl;
+}
+
+.modal_title {
+  @apply text-2xl font-zzz font-thin opacity-80 line-clamp-1;
 }

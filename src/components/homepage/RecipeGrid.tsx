@@ -4,6 +4,7 @@ import { generateListQueryParams } from "@/libs/helpers";
 import { getList } from "@/services/data.service";
 import { recipeKeys } from "@/utils";
 import {
+  Text,
   ActionIcon,
   Center,
   Loader,
@@ -63,13 +64,16 @@ const RecipeGrid = () => {
 
   return (
     <div className="flex flex-col gap-4 mb-12">
-      <div className="sticky top-14 bg-white z-10 p-2 xs:p-4">
+      <Text className="font-zzz text-3xl xs:text-4xl font-light text-center">
+        {t("search_placeholder")}
+      </Text>
+      <div className="sticky -mx-2 xs:-mx-4 top-14 bg-[var(--mantine-color-body)] py-8 z-10 p-2 xs:p-4">
         <TextInput
           size={isMobile ? "md" : "xl"}
           radius="xl"
           value={q || ""}
           onChange={(event) => setQ(event.currentTarget.value)}
-          placeholder={t("search_placeholder")}
+          placeholder="Search..."
           rightSection={
             <ActionIcon
               size={isMobile ? "md" : "xl"}

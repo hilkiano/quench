@@ -10,7 +10,7 @@ import "@mantine/dropzone/styles.css";
 import "@mantine/carousel/styles.css";
 import "@/styles/layout.css";
 import "@/styles/globals.css";
-import { mulishFont } from "@/styles/fonts";
+import { mulishFont, zzzFont, fredokaFont } from "@/styles/fonts";
 import UserProvider from "@/libs/user.provider";
 import { ModalsProvider } from "@mantine/modals";
 import { headers } from "next/headers";
@@ -37,7 +37,9 @@ export default async function RootLayout({
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </head>
-      <body className={`${mulishFont.variable} font-sans antialiased`}>
+      <body
+        className={`${fredokaFont.variable} ${zzzFont.variable} ${mulishFont.variable} font-sans antialiased`}
+      >
         <Toaster />
         <QueryProvider>
           <NuqsAdapter>

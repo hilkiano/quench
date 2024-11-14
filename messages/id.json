@@ -22,7 +22,10 @@
     "Button": {
       "yes": "Ya",
       "no": "Tidak",
-      "go_back": "Kembali"
+      "go_back": "Kembali",
+      "login_google": "Login dengan Google",
+      "create": "Buat baru",
+      "load": "Muat"
     },
     "Error": {
       "403_title": "403 Forbidden",
@@ -61,7 +64,9 @@
     "label_session": "Sesi",
     "items_title_logout": "Keluar",
     "items_desc_logout": "Akhiri sesi Anda dan gunakan aplikasi sebagai tamu",
-    "modal_logout_body": "Apa kamu yakin?"
+    "modal_logout_body": "Apa kamu yakin?",
+    "unauth_title": "Bergabunglah secara gratis",
+    "unauth_description": "Cukup gunakan Akun Google kamu untuk masuk dan kamu bisa berbagi resep juga berinteraksi dengan member lain."
   },
   "Form": {
     "Validation": {
@@ -70,8 +75,9 @@
       "max": "Maksimum karakter yang diperbolehkan adalah {max}."
     },
     "Recipe": {
-      "title_label": "Apa nama resep Anda?",
+      "title_label": "Nama resep",
       "title_description": "Deskripsi",
+      "title_youtube_url": "Youtube video URL",
       "title_ingredients": "Bahan-bahan",
       "modal_title_ingredient": "Tambahkan bahan",
       "no_data": "Mohon tambahkan {data}",

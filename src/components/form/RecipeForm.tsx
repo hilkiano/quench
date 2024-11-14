@@ -1,7 +1,13 @@
 import useRecipeForm, { TFormSchema } from "@/hooks/recipe_form.hooks";
-import { Button, Textarea, TextInput } from "@mantine/core";
+import { Button, Paper } from "@mantine/core";
 import { useTranslations } from "next-intl";
-import React, { FormHTMLAttributes, forwardRef, useState } from "react";
+import React, {
+  FormHTMLAttributes,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import IngredientForm from "./IngredientForm";
 import StepSegment from "./StepSegment";
@@ -10,6 +16,10 @@ import { createRecipe } from "@/services/recipe.service";
 import { cleanData } from "@/libs/helpers";
 import { toast } from "sonner";
 import { useUserContext } from "@/libs/user.provider";
+import FormTextInput from "../reusable/FormTextField";
+import FormTextarea from "../reusable/FormTextarea";
+import ReactPlayer from "react-player/youtube";
+import VideoPlayer from "../reusable/VideoPlayer";
 
 const RecipeForm = forwardRef<
   HTMLFormElement,
@@ -20,6 +30,33 @@ const RecipeForm = forwardRef<
   const { form } = useRecipeForm();
   const [loading, setLoading] = useState(false);
   const { userData } = useUserContext();
+  const [youtubeUrl, setYoutubeUrl] = useState<string>();
+
+  const titleRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+  const loadYoutubeVideo = () => {
+    form.trigger("youtube_url").then((res) => {
+      if (res) {
+        setYoutubeUrl(form.getValues("youtube_url"));
+      } else {
+        setYoutubeUrl(undefined);
+      }
+    });
+  };
+
+  const LoadVideoButton = () => {
+    return (
+      <Button
+        size="xs"
+        variant="light"
+        radius="xl"
+        onClick={() => loadYoutubeVideo()}
+      >
+        {tCommon("Button.load")}
+      </Button>
+    );
+  };
 
   const ingredientsArray = useFieldArray({
     control: form.control,
@@ -100,46 +137,95 @@ const RecipeForm = forwardRef<
         })}
         {...props}
       >
-        <Controller
-          control={form.control}
-          name="title"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              value={value}
-              onChange={onChange}
-              autoComplete="off"
-              error={form.formState.errors.title?.message}
-              label={t("Recipe.title_label")}
-              size="lg"
+        <div className="flex flex-col gap-6 sm:flex-row w-full">
+          <div className="flex flex-col gap-4 w-full sm:w-1/2">
+            <Controller
+              control={form.control}
+              name="title"
+              render={({ field: { onChange, value } }) => (
+                <FormTextInput
+                  value={value}
+                  onChange={onChange}
+                  autoComplete="off"
+                  error={form.formState.errors.title?.message}
+                  label={t("Recipe.title_label")}
+                  size="lg"
+                  length={titleRef.current?.value.length || 0}
+                  maxLength={255}
+                  withCounter
+                  ref={titleRef}
+                />
+              )}
             />
-          )}
-        />
-        <Controller
-          control={form.control}
-          name="description"
-          render={({ field: { onChange, value } }) => (
-            <Textarea
-              value={value || ""}
-              onChange={onChange}
-              autoComplete="off"
-              error={form.formState.errors.description?.message}
-              label={t("Recipe.title_description")}
-              rows={4}
+            <Controller
+              control={form.control}
+              name="description"
+              render={({ field: { onChange, value } }) => (
+                <FormTextarea
+                  size="lg"
+                  value={value || ""}
+                  onChange={onChange}
+                  autoComplete="off"
+                  error={form.formState.errors.description?.message}
+                  label={t("Recipe.title_description")}
+                  rows={4}
+                  ref={descriptionRef}
+                />
+              )}
             />
-          )}
-        />
+          </div>
+          <div className="flex flex-col gap-4 w-full sm:w-1/2">
+            <Paper className="p-4 rounded-xl shadow-lg bg-neutral-200/50 dark:bg-neutral-700/20">
+              <Controller
+                control={form.control}
+                name="youtube_url"
+                render={({ field: { onChange, value } }) => (
+                  <FormTextInput
+                    value={value}
+                    onChange={(e) => {
+                      if (e.target.value === "") {
+                        form.resetField("youtube_url");
+                        loadYoutubeVideo();
+                      }
+
+                      onChange(e);
+                    }}
+                    autoComplete="off"
+                    size="lg"
+                    error={form.formState.errors.youtube_url?.message}
+                    label={t("Recipe.title_youtube_url")}
+                    rightSection={<LoadVideoButton />}
+                    classNames={{
+                      input: "pr-20",
+                      section: "w-auto mr-2",
+                    }}
+                  />
+                )}
+              />
+            </Paper>
+            {youtubeUrl ? (
+              <VideoPlayer controls width="100%" url={youtubeUrl} />
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
 
         <IngredientForm
           ingredientsArray={ingredientsArray}
           submitFn={appendIngredient}
-          className={`p-4 mt-4 h-[200px] ${
-            form.formState.errors.ingredients ? "border-red-500" : ""
+          className={`p-4 rounded-xl shadow-lg mt-4 h-[200px] ${
+            form.formState.errors.ingredients
+              ? "bg-red-200/50 dark:bg-red-700/30 border-2 border-solid border-red-500"
+              : "bg-neutral-200/50 dark:bg-neutral-700/20"
           }`}
         />
 
         <StepSegment
-          className={`p-4 h-[600px] xs:h-[400px] flex flex-col ${
-            form.formState.errors.steps ? "border-red-500" : ""
+          className={`p-4 h-[600px] xs:h-[440px] rounded-xl shadow-lg mt-4 flex flex-col gap-4 ${
+            form.formState.errors.steps
+              ? "bg-red-200/50 dark:bg-red-700/30 border-2 border-solid border-red-500"
+              : "bg-neutral-200/50 dark:bg-neutral-700/20"
           }`}
           stepsArray={stepsArray}
         />

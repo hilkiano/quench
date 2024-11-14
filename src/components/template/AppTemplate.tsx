@@ -7,16 +7,20 @@ import {
   AppShellProps,
   Avatar,
   Button,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconArrowLeft,
   IconCirclePlus,
   IconLogin2,
   IconUserCircle,
+  IconWriting,
 } from "@tabler/icons-react";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useUserContext } from "@/libs/user.provider";
-import { useHeadroom } from "@mantine/hooks";
+import { useHeadroom, useMediaQuery } from "@mantine/hooks";
+import { SettingSvg } from "../Svgs";
+import { useTranslations } from "next-intl";
 
 type TAppTemplate = {
   children: React.ReactNode;
@@ -24,48 +28,29 @@ type TAppTemplate = {
 
 const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
   ({ children, ...props }, ref) => {
+    const t = useTranslations("Common");
     const router = useRouter();
-    const { userData } = useUserContext();
     const pathname = usePathname();
+    const theme = useMantineTheme();
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
 
-    const UserAvatar = () => (
-      <Avatar
-        component={Link}
-        href="/settings"
-        name={userData?.user.email}
-        color="initials"
-        radius="xl"
-      >
-        <IconUserCircle size="1.5rem" />
-      </Avatar>
-    );
-
-    const LoginButton = () => (
-      <ActionIcon
-        id="login-button"
-        size="lg"
-        variant="transparent"
-        aria-label="Login"
-        onClick={() => {
-          router.push(
-            `${process.env.NEXT_PUBLIC_WEB_URL}auth/google?redirect=${pathname}`
-          );
-        }}
-      >
-        <IconLogin2 />
+    const SettingNav = () => (
+      <ActionIcon variant="transparent" component={Link} href="/settings">
+        <SettingSvg width={24} height={24} />
       </ActionIcon>
     );
 
     const CreateButton = () => (
-      <ActionIcon
+      <Button
         component={Link}
         href="/create"
-        size="lg"
+        size={isMobile ? "sm" : "md"}
         variant="gradient"
+        leftSection={<IconWriting />}
         radius="xl"
       >
-        <IconCirclePlus />
-      </ActionIcon>
+        {t("Button.create")}
+      </Button>
     );
 
     const BackNav = () => (
@@ -82,7 +67,11 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
     const pinned = useHeadroom({ fixedAt: 120 });
 
     return (
-      <AppShell header={{ height: 60, offset: false }} {...props} ref={ref}>
+      <AppShell
+        header={{ height: isMobile ? 60 : 80, offset: false }}
+        {...props}
+        ref={ref}
+      >
         <AppShell.Header
           withBorder={false}
           className="flex justify-between items-center max-w-[1000px] mr-auto ml-auto px-4"
@@ -90,7 +79,7 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
           {pathname !== "/" ? <BackNav /> : <CreateButton />}
           {/* LOGO HERE */}
           <div className="flex gap-4 items-center">
-            {userData ? <UserAvatar /> : <LoginButton />}
+            <SettingNav />
           </div>
         </AppShell.Header>
         <AppShell.Main className="max-w-[1000px] mr-auto ml-auto px-4">

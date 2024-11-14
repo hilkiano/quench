@@ -1,3 +1,4 @@
+import { cleanData } from "@/libs/helpers";
 import axios from "axios";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
@@ -23,6 +24,9 @@ export async function GET(request: NextRequest) {
 
   return Response.json(
     { ...response.data },
-    { headers: response.headers, status: response.status }
+    {
+      headers: cleanData({ ...response.headers, "content-length": undefined }),
+      status: response.status,
+    }
   );
 }

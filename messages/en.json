@@ -22,7 +22,10 @@
     "Button": {
       "yes": "Yes",
       "no": "No",
-      "go_back": "Go back"
+      "go_back": "Go back",
+      "login_google": "Login with Google",
+      "create": "Create",
+      "load": "Load"
     },
     "Error": {
       "403_title": "403 Forbidden",
@@ -61,7 +64,9 @@
     "label_session": "Session",
     "items_title_logout": "Logout",
     "items_desc_logout": "End your session and use application as a guest",
-    "modal_logout_body": "Are you sure?"
+    "modal_logout_body": "Are you sure?",
+    "unauth_title": "Join for free",
+    "unauth_description": "Simply use your Google Account to login and you can upload your recipe and interact with others."
   },
   "Form": {
     "Validation": {
@@ -70,8 +75,9 @@
       "max": "Maximum characters allowed is {max}."
     },
     "Recipe": {
-      "title_label": "What is your recipe called?",
+      "title_label": "Recipe name",
       "title_description": "Description",
+      "title_youtube_url": "Youtube video URL",
       "title_ingredients": "Ingredients",
       "modal_title_ingredient": "Add ingredient",
       "no_data": "Please add some {data}",

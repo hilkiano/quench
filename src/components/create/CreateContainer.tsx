@@ -10,7 +10,9 @@ const CreateContainer = forwardRef<HTMLDivElement, BoxProps>(
     const t = useTranslations("Create");
     return (
       <Box {...props} ref={ref}>
-        <h2 className="m-0 text-3xl xs:text-4xl">{t("title")}</h2>
+        <h2 className="font-zzz font-light m-0 text-3xl xs:text-4xl">
+          {t("title")}
+        </h2>
         <RecipeForm
           id="recipe-form"
           noValidate

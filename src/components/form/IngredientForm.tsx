@@ -11,20 +11,21 @@ import {
   Paper,
   PaperProps,
   Select,
-  TextInput,
+  Text,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconEdit,
-  IconMoodEmptyFilled,
+  IconPaperBag,
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
 import { useLocale, useTranslations } from "next-intl";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { Controller, UseFieldArrayReturn } from "react-hook-form";
 import { TFormSchema } from "@/hooks/recipe_form.hooks";
+import FormTextInput from "../reusable/FormTextField";
 
 type TIngredientForm = {
   ingredientsArray: UseFieldArrayReturn<
@@ -47,6 +48,8 @@ const IngredientForm = forwardRef<
   const [numberQty, setNumberQty] = useState<number>();
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [updateIndex, setUpdateIndex] = useState<number>();
+
+  const nameRef = useRef<HTMLInputElement>(null);
 
   const getUnitLabel = (id: number) => {
     if (queries.unitsQuery.data) {
@@ -78,16 +81,21 @@ const IngredientForm = forwardRef<
 
   return (
     <>
-      <Paper withBorder radius="md" {...props}>
+      <Paper {...props}>
         <div className="flex justify-between items-center">
-          <div className="flex gap-2">
-            <p className="m-0 text-sm">{t("Recipe.title_ingredients")}</p>
-            <Badge circle>{ingredientsArray.fields.length}</Badge>
+          <div className="flex items-center gap-2">
+            <Text className="text-lg font-medium">
+              {t("Recipe.title_ingredients")}
+            </Text>
+            <Badge size="lg" circle>
+              {ingredientsArray.fields.length}
+            </Badge>
           </div>
 
           <ActionIcon
             aria-label="Add ingredient"
-            size="sm"
+            variant="gradient"
+            size="md"
             radius="xl"
             onClick={open}
           >
@@ -104,12 +112,12 @@ const IngredientForm = forwardRef<
               withControls={false}
               dragFree
               classNames={{
-                container: "mt-4 px-1 py-4",
+                container: "px-1 py-4",
               }}
             >
               {ingredientsArray.fields.map((i, j) => (
                 <Carousel.Slide key={i.ingredient_field_id}>
-                  <Card shadow="sm" className="relative w-[260px]">
+                  <Card className="relative w-[260px] rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 backdrop-blur-lg drop-shadow-md">
                     <div className="flex items-center gap-2 absolute top-2 right-2">
                       <ActionIcon
                         variant="transparent"
@@ -128,7 +136,9 @@ const IngredientForm = forwardRef<
                       </ActionIcon>
                     </div>
                     <div className="w-3/4">
-                      <p className="m-0 truncate">{i.name}</p>
+                      <Text className="font-mulish font-bold text-lg truncate">
+                        {i.name}
+                      </Text>
                       <p className="m-0 opacity-80">
                         {t("Recipe.ingredient_unit", {
                           quantity: Intl.NumberFormat(locale).format(
@@ -144,7 +154,7 @@ const IngredientForm = forwardRef<
             </Carousel>
           ) : (
             <Center className="flex flex-col gap-2 opacity-45 text-center">
-              <IconMoodEmptyFilled size={36} />
+              <IconPaperBag size={36} />
               {t("Recipe.no_data", {
                 data: t("Recipe.title_ingredients").toLowerCase(),
               })}
@@ -196,12 +206,17 @@ const IngredientForm = forwardRef<
             control={form.control}
             name="name"
             render={({ field: { onChange, value } }) => (
-              <TextInput
+              <FormTextInput
+                size="lg"
                 value={value}
                 onChange={onChange}
                 autoComplete="off"
                 error={form.formState.errors.name?.message}
                 label={t("Recipe.title_name")}
+                ref={nameRef}
+                length={nameRef.current?.value.length || 0}
+                maxLength={255}
+                withCounter
               />
             )}
           />
@@ -223,6 +238,7 @@ const IngredientForm = forwardRef<
                   hideControls
                   className="w-4/5"
                   thousandSeparator
+                  size="lg"
                 />
               )}
             />
@@ -236,6 +252,7 @@ const IngredientForm = forwardRef<
                   onChange={onChange}
                   error={form.formState.errors.unit?.message}
                   label={t("Recipe.title_unit")}
+                  size="lg"
                   data={
                     queries.unitsQuery.data?.map((i) => {
                       const item = i as ComboboxItem;

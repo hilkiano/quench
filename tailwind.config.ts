@@ -21,7 +21,9 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-mulish)", ...defaultTheme.fontFamily.sans],
+        sans: ["var(--font-fredoka)", ...defaultTheme.fontFamily.sans],
+        mulish: ["var(--font-mulish)"],
+        zzz: ["var(--font-zzz)"],
       },
     },
   },

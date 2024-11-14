@@ -50,3 +50,18 @@ export const generateListQueryParams = (props: TListQueryParams) => {
 
   return params;
 };
+
+export const validateYouTubeUrl = (url: string) => {
+  if (url !== "") {
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length == 11) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
+};

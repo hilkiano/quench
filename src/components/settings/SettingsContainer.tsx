@@ -1,46 +1,16 @@
 "use client";
 
-import { Box, BoxProps, Button, Paper, Text } from "@mantine/core";
+import { Box, BoxProps, Paper, Text } from "@mantine/core";
 import { forwardRef } from "react";
 import { useTranslations } from "next-intl";
-import { IconLanguage, IconLogout, IconSunMoon } from "@tabler/icons-react";
+import { IconLanguage, IconSunMoon } from "@tabler/icons-react";
 import ColorSchemeSelector from "./ColorSchemeSelector";
 import LocaleToggle from "./LocaleToggle";
-import { modals } from "@mantine/modals";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@/i18n/routing";
-import { handleLogout } from "@/services/auth.service";
-import { useUserContext } from "@/libs/user.provider";
+import AuthCard from "./AuthCard";
 
 const SettingsContainer = forwardRef<HTMLDivElement, BoxProps>(
   ({ ...props }, ref) => {
-    const tCommon = useTranslations("Common");
     const t = useTranslations("Settings");
-    const router = useRouter();
-    const { userData, setUserData } = useUserContext();
-
-    const logout = useMutation({
-      mutationFn: handleLogout,
-      onSuccess: (res) => {
-        if (res.status) {
-          router.push("/");
-          setUserData(null);
-        }
-      },
-    });
-
-    const showLogoutConfirmation = () => {
-      modals.openConfirmModal({
-        title: t("items_title_logout"),
-        children: tCommon("are_you_sure"),
-        labels: {
-          confirm: tCommon("Button.yes"),
-          cancel: tCommon("Button.no"),
-        },
-        onCancel: () => {},
-        onConfirm: () => logout.mutate(),
-      });
-    };
 
     const settings: SettingItem[] = [
       {
@@ -65,44 +35,36 @@ const SettingsContainer = forwardRef<HTMLDivElement, BoxProps>(
           },
         ],
       },
-      {
-        label: t("label_session"),
-        show: !!userData,
-        items: [
-          {
-            title: t("items_title_logout"),
-            description: t("items_desc_logout"),
-            icon: <IconLogout />,
-            handler: (
-              <Button
-                color="red"
-                className="w-full xs:w-auto self-start md:self-auto"
-                onClick={showLogoutConfirmation}
-              >
-                {t("items_title_logout")}
-              </Button>
-            ),
-          },
-        ],
-      },
     ];
 
     return (
       <Box {...props} ref={ref}>
-        <h2 className="m-0 text-3xl xs:text-4xl">{t("title")}</h2>
-        <div className="flex flex-col gap-4">
+        <div className="shrink-0 w-full md:w-[320px] flex flex-col gap-4">
+          <h2 className="font-zzz antialiased opacity-80 m-0 text-3xl xs:text-4xl font-light">
+            {t("title")}
+          </h2>
+          <AuthCard />
+        </div>
+
+        <div className="flex flex-col gap-4 w-full">
           {settings
             .filter((setting) => setting.show)
             .map((setting, i) => (
-              <Box key={i} className="w-full md:w-[640px] ">
-                <Text className="text-lg font-bold mb-4">{setting.label}</Text>
+              <Box key={i}>
+                <Text className="font-mulish font-extrabold text-lg xs:text-xl mb-2">
+                  {setting.label}
+                </Text>
                 {setting.items.map((item, j) => (
-                  <Paper key={j} className="p-4 mb-4 rounded-lg" withBorder>
+                  <Paper
+                    key={j}
+                    className="p-4 mb-4 rounded-xl shadow-md border-2 border-solid border-neutral-100 dark:border-neutral-700"
+                    withBorder
+                  >
                     <div className="flex items-start md:items-center md:flex-row flex-col gap-4 justify-between">
                       <div className="flex items-center flex-row gap-4 shrink-0">
                         {item.icon}
                         <div>
-                          <Text className="text-lg font-semibold">
+                          <Text className="text-lg font-mulish font-extrabold">
                             {item.title}
                           </Text>
                           <Text className="text-md opacity-75">

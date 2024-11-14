@@ -4,6 +4,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
+import { validateYouTubeUrl } from "@/libs/helpers";
 
 function FormSchema() {
   const t = useTranslations("Form");
@@ -19,7 +20,9 @@ function FormSchema() {
         t("Validation.max", { max: Intl.NumberFormat(locale).format(255) })
       ),
     description: z.string().nullish(),
-    youtube_url: z.string().nullish(),
+    youtube_url: z.string().refine((url) => validateYouTubeUrl(url), {
+      message: "Not a valid Youtube URL",
+    }),
     steps: z
       .array(
         z.object({
@@ -49,6 +52,7 @@ export default function useRecipeForm() {
     defaultValues: {
       title: "",
       description: "",
+      youtube_url: "",
       steps: [],
       ingredients: [],
     },

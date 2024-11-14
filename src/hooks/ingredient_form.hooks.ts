@@ -11,7 +11,10 @@ import { getComboboxData } from "@/services/data.service";
 function FormSchema() {
   const t = useTranslations("Form");
   return z.object({
-    name: z.string().min(1, t("Validation.required")),
+    name: z
+      .string()
+      .min(1, t("Validation.required"))
+      .max(255, t("Validation.max", { max: 255 })),
     quantity: z.string().min(1, t("Validation.required")),
     unit: z.string().min(1, t("Validation.required")),
   });
