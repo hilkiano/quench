@@ -18,22 +18,23 @@ import {
   IconEdit,
   IconGripHorizontal,
   IconGripVertical,
-  IconMoodEmptyFilled,
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
 import StepForm from "./StepForm";
+import YouTubePlayer from "react-player/youtube";
 
 type TStepSegment = {
   stepsArray: UseFieldArrayReturn<TFormSchema, "steps", "step_field_id">;
+  duration?: number;
 };
 
 const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
-  ({ stepsArray, ...props }, ref) => {
+  ({ stepsArray, duration, ...props }, ref) => {
     const t = useTranslations("Form");
     const theme = useMantineTheme();
     const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
@@ -192,7 +193,7 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
           }
         >
           <StepForm
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 mx-2"
             submitFn={(data) => {
               if (typeof updateIndex !== "undefined") {
                 stepsArray.update(updateIndex, {
@@ -210,6 +211,7 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
               setUpdateIndex(undefined);
             }}
             data={updateData}
+            videoDuration={duration}
           />
         </Modal>
       </>

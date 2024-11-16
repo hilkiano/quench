@@ -91,7 +91,19 @@
       "modal_title_update_step": "Update step",
       "title_step": "Explain the details what needs to be done",
       "step": "Step #{order}",
-      "success_added": "Recipe <emp>{name}</emp> was sent successfully. Your recipe will appear on the home screen after getting approved by admin."
+      "success_added": "Recipe <emp>{name}</emp> was sent successfully. Your recipe will appear on the home screen after getting approved by admin.",
+      "title_method_id": "Method",
+      "method_v60": "V60",
+      "method_pour_over": "Pour over",
+      "method_french_press": "French press",
+      "method_aero_press": "Aero press",
+      "method_moka_pot": "Moka pot",
+      "method_cold_brew": "Cold brew",
+      "method_siphon": "Siphon",
+      "method_drip": "Drip",
+      "title_timer_seconds": "Timer (in seconds)",
+      "title_video_starts_at": "Timestamp",
+      "description_video_starts_at": "Video will starts at given timestamp"
     },
     "button_draft": "Save as draft",
     "button_submit": "Submit"

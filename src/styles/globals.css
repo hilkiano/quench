@@ -21,3 +21,16 @@
     display: block;
   }
 }
+
+.player-wrapper {
+  position: relative;
+  border-radius: 5px;
+}
+
+.react-player__preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 20px;
+  overflow: hidden;
+}

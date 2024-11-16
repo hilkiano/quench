@@ -1,13 +1,7 @@
 import useRecipeForm, { TFormSchema } from "@/hooks/recipe_form.hooks";
-import { Button, Paper } from "@mantine/core";
+import { Button, ComboboxItem, Paper, Select } from "@mantine/core";
 import { useTranslations } from "next-intl";
-import React, {
-  FormHTMLAttributes,
-  forwardRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FormHTMLAttributes, forwardRef, useRef, useState } from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import IngredientForm from "./IngredientForm";
 import StepSegment from "./StepSegment";
@@ -18,8 +12,9 @@ import { toast } from "sonner";
 import { useUserContext } from "@/libs/user.provider";
 import FormTextInput from "../reusable/FormTextField";
 import FormTextarea from "../reusable/FormTextarea";
-import ReactPlayer from "react-player/youtube";
 import VideoPlayer from "../reusable/VideoPlayer";
+import YouTubePlayer from "react-player/youtube";
+import FormFileInput from "../reusable/FormFileInput";
 
 const RecipeForm = forwardRef<
   HTMLFormElement,
@@ -27,10 +22,11 @@ const RecipeForm = forwardRef<
 >(({ ...props }, ref) => {
   const tCommon = useTranslations("Common");
   const t = useTranslations("Form");
-  const { form } = useRecipeForm();
+  const { form, queries } = useRecipeForm();
   const [loading, setLoading] = useState(false);
   const { userData } = useUserContext();
   const [youtubeUrl, setYoutubeUrl] = useState<string>();
+  const [duration, setDuration] = useState<number>();
 
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -96,6 +92,8 @@ const RecipeForm = forwardRef<
     onSettled: () => setLoading(false),
   });
 
+  const playerRef = useRef<YouTubePlayer>(null);
+
   const handleCreate = () => {
     if (!userData) {
       document.getElementById("login-button")?.click();
@@ -141,6 +139,29 @@ const RecipeForm = forwardRef<
           <div className="flex flex-col gap-4 w-full sm:w-1/2">
             <Controller
               control={form.control}
+              name="method_id"
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  allowDeselect={false}
+                  value={value}
+                  onChange={onChange}
+                  error={form.formState.errors.method_id?.message}
+                  label={t("Recipe.title_method_id")}
+                  size="lg"
+                  data={
+                    queries.methodQuery.data?.map((i) => {
+                      const item = i as ComboboxItem;
+                      return {
+                        label: t(`Recipe.method_${item.label.toLowerCase()}`),
+                        value: item.value.toString(),
+                      };
+                    }) || []
+                  }
+                />
+              )}
+            />
+            <Controller
+              control={form.control}
               name="title"
               render={({ field: { onChange, value } }) => (
                 <FormTextInput
@@ -175,6 +196,22 @@ const RecipeForm = forwardRef<
             />
           </div>
           <div className="flex flex-col gap-4 w-full sm:w-1/2">
+            <Controller
+              control={form.control}
+              name="image"
+              render={({ field: { onChange, value } }) => (
+                <FormFileInput
+                  clearable
+                  label="Cover image"
+                  onChange={onChange}
+                  value={value}
+                  size="lg"
+                  accept="image/png,image/jpeg"
+                  withPreview={form.getValues("image")}
+                  error={form.formState.errors.image?.message}
+                />
+              )}
+            />
             <Paper className="p-4 rounded-xl shadow-lg bg-neutral-200/50 dark:bg-neutral-700/20">
               <Controller
                 control={form.control}
@@ -186,6 +223,7 @@ const RecipeForm = forwardRef<
                       if (e.target.value === "") {
                         form.resetField("youtube_url");
                         loadYoutubeVideo();
+                        setDuration(undefined);
                       }
 
                       onChange(e);
@@ -204,7 +242,14 @@ const RecipeForm = forwardRef<
               />
             </Paper>
             {youtubeUrl ? (
-              <VideoPlayer controls width="100%" url={youtubeUrl} />
+              <div className="player-wrapper">
+                <VideoPlayer
+                  onReady={() => setDuration(playerRef.current?.getDuration())}
+                  ref={playerRef}
+                  width="100%"
+                  url={youtubeUrl}
+                />
+              </div>
             ) : (
               <></>
             )}
@@ -228,6 +273,7 @@ const RecipeForm = forwardRef<
               : "bg-neutral-200/50 dark:bg-neutral-700/20"
           }`}
           stepsArray={stepsArray}
+          duration={duration}
         />
 
         <div className="my-8 w-full flex justify-end">

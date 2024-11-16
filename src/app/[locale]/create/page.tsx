@@ -7,7 +7,7 @@ import { NextIntlClientProvider, useMessages } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import pick from "lodash/pick";
 import CreateContainer from "@/components/create/CreateContainer";
-import { unitKeys } from "@/utils";
+import { methodKeys, unitKeys } from "@/utils";
 import { getComboboxData } from "@/services/data.service";
 
 export async function generateMetadata({
@@ -34,6 +34,16 @@ export default async function Create() {
     queryFn: () =>
       getComboboxData({
         model: "Unit",
+        label: "name",
+        value: "id",
+      }),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: methodKeys.all,
+    queryFn: () =>
+      getComboboxData({
+        model: "Method",
         label: "name",
         value: "id",
       }),

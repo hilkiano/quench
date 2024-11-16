@@ -87,7 +87,7 @@ const AuthCard = forwardRef<HTMLDivElement, PaperProps>((props, ref) => {
         leftSection={<GoogleSvg width={18} height={18} />}
         aria-label="Login"
         component={Link}
-        href={`${process.env.NEXT_PUBLIC_WEB_URL}auth/google?redirect=${pathname}`}
+        href={`${process.env.NEXT_PUBLIC_WEB_URL}auth/google?redirect=/`}
         className="self-end w-full mt-6"
         variant="default"
         radius="md"

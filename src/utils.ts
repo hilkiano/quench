@@ -14,6 +14,14 @@ export const unitKeys = {
   detail: (id: number) => [...unitKeys.details(), id] as const,
 };
 
+export const methodKeys = {
+  all: ["method"] as const,
+  lists: () => [...methodKeys.all, "list"] as const,
+  list: (filters: string) => [...methodKeys.lists(), { filters }] as const,
+  details: () => [...methodKeys.all, "detail"] as const,
+  detail: (id: number) => [...methodKeys.details(), id] as const,
+};
+
 export const recipeKeys = {
   all: ["recipe"] as const,
   lists: () => [...recipeKeys.all, "list"] as const,

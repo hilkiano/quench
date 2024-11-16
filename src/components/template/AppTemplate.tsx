@@ -74,16 +74,19 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
       >
         <AppShell.Header
           withBorder={false}
-          className="flex justify-between items-center max-w-[1000px] mr-auto ml-auto px-4"
+          className="bg-transparent backdrop-blur-lg border-solid border-b border-0 border-[var(--mantine-color-default-border)]"
         >
-          {pathname !== "/" ? <BackNav /> : <CreateButton />}
-          {/* LOGO HERE */}
-          <div className="flex gap-4 items-center">
-            <SettingNav />
+          <div className="max-w-[1000px] h-full flex justify-between items-center px-4 mr-auto ml-auto">
+            {pathname !== "/" ? <BackNav /> : <CreateButton />}
+
+            {/* LOGO HERE */}
+            <div className="flex gap-4 items-center">
+              <SettingNav />
+            </div>
           </div>
         </AppShell.Header>
         <AppShell.Main className="max-w-[1000px] mr-auto ml-auto px-4">
-          {children}
+          <div className="mt-4 xs:mt-8">{children}</div>
         </AppShell.Main>
       </AppShell>
     );

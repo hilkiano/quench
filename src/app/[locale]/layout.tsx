@@ -38,7 +38,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${fredokaFont.variable} ${zzzFont.variable} ${mulishFont.variable} font-sans antialiased`}
+        className={`${fredokaFont.variable} ${zzzFont.variable} ${mulishFont.variable} font-sans antialiased bg-[url('/images/bg.svg')] bg-cover bg-no-repeat bg-center bg-fixed`}
       >
         <Toaster />
         <QueryProvider>

@@ -64,29 +64,37 @@ const RecipeGrid = () => {
 
   return (
     <div className="flex flex-col gap-4 mb-12">
-      <Text className="font-zzz text-3xl xs:text-4xl font-light text-center">
-        {t("search_placeholder")}
-      </Text>
-      <div className="sticky -mx-2 xs:-mx-4 top-14 bg-[var(--mantine-color-body)] py-8 z-10 p-2 xs:p-4">
-        <TextInput
-          size={isMobile ? "md" : "xl"}
-          radius="xl"
-          value={q || ""}
-          onChange={(event) => setQ(event.currentTarget.value)}
-          placeholder="Search..."
-          rightSection={
-            <ActionIcon
-              size={isMobile ? "md" : "xl"}
-              radius="xl"
-              onClick={() => {
-                setGlobalFilter(q);
-                queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
-              }}
-            >
-              <IconSearch size={isMobile ? 16 : 24} />
-            </ActionIcon>
-          }
-        />
+      <div className="sticky -mx-2 xs:-mx-4 top-14 xs:top-20 bg-[var(--mantine-color-body)] py-8 z-10 p-2 xs:p-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            setGlobalFilter(q);
+            queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+          }}
+        >
+          <TextInput
+            classNames={{
+              root: "my-0 xs:my-4",
+              input: "rounded-full",
+            }}
+            size={isMobile ? "md" : "xl"}
+            value={q || ""}
+            onChange={(event) => setQ(event.currentTarget.value)}
+            placeholder="Search..."
+            rightSection={
+              <ActionIcon
+                aria-label="Search recipe"
+                id="search-recipe-btn"
+                size={isMobile ? "md" : "xl"}
+                radius="xl"
+                type="submit"
+              >
+                <IconSearch size={isMobile ? 16 : 24} />
+              </ActionIcon>
+            }
+          />
+        </form>
       </div>
       <InfiniteScroll
         loadMore={() => fetchNextPage()}

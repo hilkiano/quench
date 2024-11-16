@@ -9,6 +9,7 @@ import {
   Text,
   Button,
   Modal,
+  FileInput,
 } from "@mantine/core";
 import classes from "./component.module.css";
 
@@ -21,6 +22,11 @@ export const theme = createTheme({
   primaryColor: "orange",
   components: {
     TextInput: TextInput.extend({
+      classNames: {
+        input: classes.textInput_input,
+      },
+    }),
+    FileInput: FileInput.extend({
       classNames: {
         input: classes.textInput_input,
       },

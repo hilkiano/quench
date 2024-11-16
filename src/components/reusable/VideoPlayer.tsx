@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
+import YouTubePlayer from "react-player/youtube";
 import ReactPlayer, { YouTubePlayerProps } from "react-player/youtube";
 
-const VideoPlayer = ({ ...props }: YouTubePlayerProps) => {
-  const [hasWindow, setHasWindow] = useState(false);
+const VideoPlayer = forwardRef<YouTubePlayer, YouTubePlayerProps>(
+  ({ ...props }, ref) => {
+    const [hasWindow, setHasWindow] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setHasWindow(true);
-    }
-  }, []);
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        setHasWindow(true);
+      }
+    }, []);
 
-  return hasWindow ? <ReactPlayer {...props} /> : <></>;
-};
+    return hasWindow ? <ReactPlayer ref={ref} {...props} /> : <></>;
+  }
+);
 
+VideoPlayer.displayName = "VideoPlayer";
 export default VideoPlayer;
