@@ -21,7 +21,7 @@ import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 
 const RecipeGrid = () => {
-  const t = useTranslations("Homepage");
+  const t = useTranslations("Recipe");
   const [q, setQ] = useQueryState("q", { defaultValue: "" });
   const params = useSearchParams();
   const [globalFilter, setGlobalFilter] = useState<string>(
@@ -64,7 +64,7 @@ const RecipeGrid = () => {
 
   return (
     <div className="flex flex-col gap-4 mb-12">
-      <div className="sticky -mx-2 xs:-mx-4 top-14 xs:top-20 bg-[var(--mantine-color-body)] py-8 z-10 p-2 xs:p-4">
+      <div className="sticky -mx-2 xs:-mx-4 top-14 xs:top-20 bg-[var(--mantine-color-body)] z-10 p-2 xs:p-4">
         <form
           onSubmit={(e) => {
             e.preventDefault();

@@ -15,9 +15,11 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
+  IconClockPlay,
   IconEdit,
   IconGripHorizontal,
   IconGripVertical,
+  IconHourglass,
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
@@ -30,11 +32,10 @@ import YouTubePlayer from "react-player/youtube";
 
 type TStepSegment = {
   stepsArray: UseFieldArrayReturn<TFormSchema, "steps", "step_field_id">;
-  duration?: number;
 };
 
 const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
-  ({ stepsArray, duration, ...props }, ref) => {
+  ({ stepsArray, ...props }, ref) => {
     const t = useTranslations("Form");
     const theme = useMantineTheme();
     const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
@@ -68,7 +69,10 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
                 variant="gradient"
                 radius="xl"
                 aria-label="Add step"
-                onClick={open}
+                onClick={() => {
+                  setUpdateData(undefined);
+                  open();
+                }}
               >
                 <IconPlus />
               </ActionIcon>
@@ -122,6 +126,33 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
                                 >
                                   {t("Recipe.step", { order: i + 1 })}
                                 </Badge>
+                                <div
+                                  className={`flex absolute bottom-2 ${
+                                    isMobile ? "right-2" : "left-2"
+                                  }`}
+                                >
+                                  {s.video_starts_at && s.video_stops_at && (
+                                    <Badge
+                                      size="lg"
+                                      circle
+                                      variant="transparent"
+                                    >
+                                      <IconClockPlay size={20} />
+                                    </Badge>
+                                  )}
+                                  {s.timer_seconds ? (
+                                    <Badge
+                                      size="lg"
+                                      circle
+                                      variant="transparent"
+                                    >
+                                      <IconHourglass size={20} />
+                                    </Badge>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </div>
+
                                 <div className="flex gap-2 items-center absolute top-2 right-2">
                                   <ActionIcon
                                     variant="transparent"
@@ -211,7 +242,6 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
               setUpdateIndex(undefined);
             }}
             data={updateData}
-            videoDuration={duration}
           />
         </Modal>
       </>

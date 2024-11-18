@@ -41,7 +41,7 @@
 
 /* MODAL */
 .modal_header {
-  @apply bg-transparent;
+  @apply bg-transparent backdrop-blur-md;
 }
 
 .modal_content {

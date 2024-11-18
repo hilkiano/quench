@@ -3,14 +3,10 @@ type TCreateRecipe = Partial<Recipe> & {
   steps: Partial<RecipeStep>[];
 };
 
-export async function createRecipe(payload: TCreateRecipe) {
+export async function createRecipe(formData: FormData) {
   const response = await fetch(`/api/recipe`, {
     method: "PUT",
-    body: JSON.stringify(payload),
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
+    body: formData,
   })
     .then((res) => res.json())
     .then((res: JsonResponse<any>) => {

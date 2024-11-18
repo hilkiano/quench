@@ -12,8 +12,7 @@ function FormSchema() {
       .string()
       .min(1, t("Validation.required"))
       .max(300, t("Validation.max", { max: 300 })),
-    timer_seconds: z.string(),
-    video_starts_at: z.number().nullish(),
+    timer_seconds: z.number().nullish(),
   });
 }
 
@@ -24,8 +23,7 @@ export default function useStepForm() {
     resolver: zodResolver(FormSchema()),
     defaultValues: {
       step: "",
-      timer_seconds: "",
-      video_starts_at: undefined,
+      timer_seconds: undefined,
     },
   });
 

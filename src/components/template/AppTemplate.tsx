@@ -21,6 +21,7 @@ import { useUserContext } from "@/libs/user.provider";
 import { useHeadroom, useMediaQuery } from "@mantine/hooks";
 import { SettingSvg } from "../Svgs";
 import { useTranslations } from "next-intl";
+import { cn } from "@/utils";
 
 type TAppTemplate = {
   children: React.ReactNode;
@@ -68,7 +69,7 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
 
     return (
       <AppShell
-        header={{ height: isMobile ? 60 : 80, offset: false }}
+        header={{ height: isMobile ? 60 : 80, collapsed: pathname === "/" }}
         {...props}
         ref={ref}
       >
@@ -86,7 +87,9 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
           </div>
         </AppShell.Header>
         <AppShell.Main className="max-w-[1000px] mr-auto ml-auto px-4">
-          <div className="mt-4 xs:mt-8">{children}</div>
+          <div className={cn("", { "mt-4 xs:mt-8": pathname !== "/" })}>
+            {children}
+          </div>
         </AppShell.Main>
       </AppShell>
     );

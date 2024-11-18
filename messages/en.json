@@ -41,7 +41,9 @@
       "title": "Quench App",
       "description": "Search any coffee recipes or share your own creation."
     },
-    "search_placeholder": "What would you like to brew today?"
+    "search_placeholder": "What would you like to brew today?",
+    "header": "Hi, <gradient>{user}!</gradient>",
+    "subheader": "Ready to make some coffee?"
   },
   "Create": {
     "Meta": {
@@ -49,6 +51,14 @@
       "description": "Share your own recipe to the world."
     },
     "title": "Make new recipe"
+  },
+  "Recipe": {
+    "List": {
+      "Meta": {
+        "title": "Quench App | Browse recipe",
+        "description": "Search any coffee recipes or share your own creation."
+      }
+    }
   },
   "Settings": {
     "Meta": {
@@ -102,8 +112,13 @@
       "method_siphon": "Siphon",
       "method_drip": "Drip",
       "title_timer_seconds": "Timer (in seconds)",
-      "title_video_starts_at": "Timestamp",
-      "description_video_starts_at": "Video will starts at given timestamp"
+      "title_video_starts_at": "Starts at",
+      "description_video_starts_at": "Video will starts at given timestamp",
+      "btn_remove_timestamp": "Remove timestamp",
+      "btn_add_timestamp": "Add timestamp",
+      "btn_set_timestamp": "Set timestamp",
+      "btn_play": "Play",
+      "title_video_stops_at": "Stops at"
     },
     "button_draft": "Save as draft",
     "button_submit": "Submit"

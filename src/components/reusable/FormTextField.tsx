@@ -29,10 +29,10 @@ const FormTextInput = forwardRef<
     <TextInput
       className={cn("", className)}
       classNames={{
-        input: withCounter ? "pr-16" : "",
+        input: withCounter ? "pr-16" : "pr-0",
       }}
       ref={ref}
-      rightSection={withCounter ? <Counter /> : <></>}
+      rightSection={withCounter ? <Counter /> : undefined}
       {...inputProps}
     />
   );

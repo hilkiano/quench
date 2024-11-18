@@ -41,7 +41,9 @@
       "title": "Quench App",
       "description": "Cari resep kopi apa pun atau bagikan kreasi Anda sendiri."
     },
-    "search_placeholder": "Apa yang mau Anda buat hari ini?"
+    "search_placeholder": "Apa yang mau Anda buat hari ini?",
+    "header": "Hi, <gradient>{user}!</gradient>",
+    "subheader": "Sudah siap untuk membuat kopi?"
   },
   "Create": {
     "Meta": {
@@ -49,6 +51,14 @@
       "description": "Bagikan resep buatan Anda kepada dunia."
     },
     "title": "Buat resep baru"
+  },
+  "Recipe": {
+    "List": {
+      "Meta": {
+        "title": "Quench App | Cari resep",
+        "description": "Cari resep kopi apa pun atau bagikan kreasi Anda sendiri."
+      }
+    }
   },
   "Settings": {
     "Meta": {
@@ -102,8 +112,13 @@
       "method_siphon": "Siphon",
       "method_drip": "Drip",
       "title_timer_seconds": "Pengatur waktu (satuan detik)",
-      "title_video_starts_at": "Stempel waktu",
-      "description_video_starts_at": "Video akan dimulai pada stempel waktu tertentu"
+      "title_video_starts_at": "Mulai di",
+      "description_video_starts_at": "Video akan dimulai pada stempel waktu tertentu",
+      "btn_remove_timestamp": "Hapus timestamp",
+      "btn_add_timestamp": "Tambahkan timestamp",
+      "btn_set_timestamp": "Tetapkan timestamp",
+      "btn_play": "Mainkan",
+      "title_video_stops_at": "Berhenti di"
     },
     "button_draft": "Simpan sebagai draft",
     "button_submit": "Kirim"

@@ -33,7 +33,9 @@ function FormSchema() {
         z.object({
           step: z.string().min(1, t("Validation.required")),
           order: z.number(),
-          image: z.custom<File>().nullish(),
+          timer_seconds: z.number().nullish(),
+          video_starts_at: z.number().nullish(),
+          video_stops_at: z.number().nullish(),
         })
       )
       .min(1, t("Validation.required")),

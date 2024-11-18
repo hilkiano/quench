@@ -8,7 +8,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <NextIntlClientProvider messages={pick(messages, ["Common"])}>
-      <AppTemplate classNames={{ main: "pt-20" }}>{children}</AppTemplate>
+      <AppTemplate>{children}</AppTemplate>
     </NextIntlClientProvider>
   );
 }

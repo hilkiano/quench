@@ -1,14 +1,16 @@
-import HomepageContainer from "@/components/homepage/HomepageContainer";
-import { getList } from "@/services/data.service";
-import { recipeKeys } from "@/utils";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import pick from "lodash/pick";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import pick from "lodash/pick";
+import CreateContainer from "@/components/create/CreateContainer";
+import { methodKeys, unitKeys } from "@/utils";
+import { getComboboxData } from "@/services/data.service";
+import { Box } from "@mantine/core";
+import RecipeGrid from "@/components/homepage/RecipeGrid";
 
 export async function generateMetadata({
   params: { locale },
@@ -17,7 +19,7 @@ export async function generateMetadata({
 }) {
   const t = await getTranslations({
     locale,
-    namespace: "Homepage",
+    namespace: "Recipe.List",
   });
 
   return {
@@ -26,23 +28,25 @@ export async function generateMetadata({
   };
 }
 
-export default async function Homepage() {
+export default async function RecipeList() {
   const queryClient = new QueryClient();
 
-  return <HomepageContent queryClient={queryClient} />;
+  return <RecipeListContent queryClient={queryClient} />;
 }
 
-type THomepageContent = {
+type TRecipeListContent = {
   queryClient: QueryClient;
 };
 
-function HomepageContent({ queryClient }: THomepageContent) {
+function RecipeListContent({ queryClient }: TRecipeListContent) {
   const messages = useMessages();
 
   return (
-    <NextIntlClientProvider messages={pick(messages, ["Common", "Homepage"])}>
+    <NextIntlClientProvider messages={pick(messages, ["Common", "Recipe"])}>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <HomepageContainer />
+        <Box className="flex flex-col gap-4">
+          <RecipeGrid />
+        </Box>
       </HydrationBoundary>
     </NextIntlClientProvider>
   );

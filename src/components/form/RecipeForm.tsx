@@ -1,13 +1,30 @@
 import useRecipeForm, { TFormSchema } from "@/hooks/recipe_form.hooks";
-import { Button, ComboboxItem, Paper, Select } from "@mantine/core";
+import {
+  Badge,
+  Button,
+  Checkbox,
+  ComboboxItem,
+  Modal,
+  Paper,
+  RangeSlider,
+  Select,
+  Slider,
+  TextInput,
+} from "@mantine/core";
 import { useTranslations } from "next-intl";
-import { FormHTMLAttributes, forwardRef, useRef, useState } from "react";
+import {
+  FormHTMLAttributes,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import IngredientForm from "./IngredientForm";
 import StepSegment from "./StepSegment";
 import { useMutation } from "@tanstack/react-query";
 import { createRecipe } from "@/services/recipe.service";
-import { cleanData } from "@/libs/helpers";
+import { cleanData, formatTime } from "@/libs/helpers";
 import { toast } from "sonner";
 import { useUserContext } from "@/libs/user.provider";
 import FormTextInput from "../reusable/FormTextField";
@@ -15,6 +32,8 @@ import FormTextarea from "../reusable/FormTextarea";
 import VideoPlayer from "../reusable/VideoPlayer";
 import YouTubePlayer from "react-player/youtube";
 import FormFileInput from "../reusable/FormFileInput";
+import { useDisclosure } from "@mantine/hooks";
+import { OnProgressProps } from "react-player/base";
 
 const RecipeForm = forwardRef<
   HTMLFormElement,
@@ -28,6 +47,16 @@ const RecipeForm = forwardRef<
   const [youtubeUrl, setYoutubeUrl] = useState<string>();
   const [duration, setDuration] = useState<number>();
 
+  const [opened, { open, close }] = useDisclosure(false);
+
+  const [timestamps, setTimestamps] = useState<
+    {
+      step_id: number;
+      starts_at: number;
+      stops_at: number;
+    }[]
+  >([]);
+
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -40,19 +69,8 @@ const RecipeForm = forwardRef<
       }
     });
   };
-
-  const LoadVideoButton = () => {
-    return (
-      <Button
-        size="xs"
-        variant="light"
-        radius="xl"
-        onClick={() => loadYoutubeVideo()}
-      >
-        {tCommon("Button.load")}
-      </Button>
-    );
-  };
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [stopsAt, setStopsAt] = useState<number>();
 
   const ingredientsArray = useFieldArray({
     control: form.control,
@@ -94,24 +112,37 @@ const RecipeForm = forwardRef<
 
   const playerRef = useRef<YouTubePlayer>(null);
 
-  const handleCreate = () => {
-    if (!userData) {
-      document.getElementById("login-button")?.click();
-      return false;
+  const handleProgress = (progress: OnProgressProps) => {
+    if (stopsAt) {
+      if (progress.playedSeconds > stopsAt) {
+        setPlaying(false);
+      }
     }
+  };
 
+  const handleCreate = () => {
     const data = form.getValues();
-    const payload = cleanData({
-      title: data.title,
-      description: data.description || undefined,
-      ingredients: data.ingredients,
-      steps: data.steps,
-    });
+    const formData = new FormData();
 
-    toast.promise(create.mutateAsync(payload), {
+    formData.append("title", data.title);
+    formData.append("method_id", data.method_id);
+    if (data.description) {
+      formData.append("description", data.description);
+    }
+    if (data.youtube_url) {
+      formData.append("youtube_url", data.youtube_url);
+    }
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+    formData.append("steps", JSON.stringify(data.steps));
+    formData.append("ingredients", JSON.stringify(data.ingredients));
+
+    toast.promise(create.mutateAsync(formData), {
       loading: tCommon("Toast.loading"),
       success: (data) => {
         form.reset();
+        setYoutubeUrl(undefined);
         return t.rich("Recipe.success_added", {
           emp: (chunks) => <span className="font-bold">{chunks}</span>,
           name: data.title,
@@ -222,34 +253,44 @@ const RecipeForm = forwardRef<
                     onChange={(e) => {
                       if (e.target.value === "") {
                         form.resetField("youtube_url");
-                        loadYoutubeVideo();
                         setDuration(undefined);
                       }
 
                       onChange(e);
                     }}
+                    onBlur={() => {
+                      loadYoutubeVideo();
+                    }}
                     autoComplete="off"
                     size="lg"
                     error={form.formState.errors.youtube_url?.message}
                     label={t("Recipe.title_youtube_url")}
-                    rightSection={<LoadVideoButton />}
-                    classNames={{
-                      input: "pr-20",
-                      section: "w-auto mr-2",
-                    }}
                   />
                 )}
               />
             </Paper>
             {youtubeUrl ? (
-              <div className="player-wrapper">
-                <VideoPlayer
-                  onReady={() => setDuration(playerRef.current?.getDuration())}
-                  ref={playerRef}
-                  width="100%"
-                  url={youtubeUrl}
-                />
-              </div>
+              <Button
+                onClick={() => {
+                  stepsArray.fields.map((field, i) => {
+                    if (field.video_starts_at && field.video_stops_at) {
+                      setTimestamps((prevTimestamps) => {
+                        return [
+                          ...prevTimestamps,
+                          {
+                            step_id: i,
+                            starts_at: field.video_starts_at!,
+                            stops_at: field.video_stops_at!,
+                          },
+                        ];
+                      });
+                    }
+                  });
+                  open();
+                }}
+              >
+                {t("Recipe.btn_set_timestamp")}
+              </Button>
             ) : (
               <></>
             )}
@@ -273,7 +314,6 @@ const RecipeForm = forwardRef<
               : "bg-neutral-200/50 dark:bg-neutral-700/20"
           }`}
           stepsArray={stepsArray}
-          duration={duration}
         />
 
         <div className="my-8 w-full flex justify-end">
@@ -288,6 +328,185 @@ const RecipeForm = forwardRef<
           </Button>
         </div>
       </form>
+
+      <Modal
+        opened={opened}
+        onClose={() => {
+          close();
+          setTimestamps([]);
+          setPlaying(false);
+        }}
+        title="Set timestamp"
+        size="lg"
+      >
+        <div className="player-wrapper">
+          <VideoPlayer
+            onReady={() => setDuration(playerRef.current?.getDuration())}
+            ref={playerRef}
+            width="100%"
+            url={youtubeUrl}
+            playing={playing}
+            onProgress={handleProgress}
+          />
+        </div>
+        <div className="flex flex-col gap-4 mt-4">
+          {stepsArray.fields.map((field, i) => (
+            <div
+              key={i}
+              className="p-4 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 drop-shadow-md relative flex flex-col gap-4"
+            >
+              <Badge
+                variant="gradient"
+                size="lg"
+                className="absolute top-2 font-mulish left-2"
+              >
+                {t("Recipe.step", { order: i + 1 })}
+              </Badge>
+              <div className="flex gap-2 absolute top-2 right-2">
+                {timestamps.some((timestamp) => timestamp.step_id === i) ? (
+                  <Button
+                    variant="default"
+                    size="xs"
+                    radius="xl"
+                    onClick={() => {
+                      setTimestamps((prevTimestamps) =>
+                        prevTimestamps.filter(
+                          (timestamp) => timestamp.step_id !== i
+                        )
+                      );
+                    }}
+                  >
+                    {t("Recipe.btn_remove_timestamp")}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="default"
+                    size="xs"
+                    radius="xl"
+                    onClick={() => {
+                      setTimestamps((prevTimestamps) => {
+                        return [
+                          ...prevTimestamps,
+                          {
+                            step_id: i,
+                            starts_at: 0,
+                            stops_at: duration || 0,
+                          },
+                        ];
+                      });
+                    }}
+                  >
+                    {t("Recipe.btn_add_timestamp")}
+                  </Button>
+                )}
+
+                <Button
+                  variant="filled"
+                  size="xs"
+                  radius="xl"
+                  disabled={!timestamps.find((t) => t.step_id === i)}
+                  onClick={() => {
+                    playerRef.current?.seekTo(
+                      timestamps.find((t) => t.step_id === i)!.starts_at
+                    );
+                    setStopsAt(
+                      timestamps.find((t) => t.step_id === i)!.stops_at
+                    );
+                    setPlaying(true);
+                  }}
+                >
+                  {t("Recipe.btn_play")}
+                </Button>
+              </div>
+
+              <div className="mt-6 line-clamp-2">{field.step}</div>
+              {timestamps.some((timestamp) => timestamp.step_id === i) && (
+                <>
+                  <RangeSlider
+                    minRange={0}
+                    label={(value) => formatTime(value || 0)}
+                    max={duration}
+                    defaultValue={[
+                      timestamps.find((t) => t.step_id === i)?.starts_at || 0,
+                      timestamps.find((t) => t.step_id === i)?.stops_at || 0,
+                    ]}
+                    onChangeEnd={(value) => {
+                      setTimestamps((prevTimestamps) => {
+                        const exists = prevTimestamps.some(
+                          (timestamp) => timestamp.step_id === i
+                        );
+
+                        if (exists) {
+                          return prevTimestamps.map((timestamp) =>
+                            timestamp.step_id === i
+                              ? {
+                                  step_id: i,
+                                  starts_at: value[0],
+                                  stops_at: value[1],
+                                }
+                              : timestamp
+                          );
+                        } else {
+                          return [
+                            ...prevTimestamps,
+                            {
+                              step_id: i,
+                              starts_at: value[0],
+                              stops_at: value[1],
+                            },
+                          ];
+                        }
+                      });
+                    }}
+                  />
+                  <div className="flex gap-4 w-full">
+                    <TextInput
+                      readOnly
+                      label={t("Recipe.title_video_starts_at")}
+                      className="w-full"
+                      disabled={!timestamps.find((t) => t.step_id === i)}
+                      value={formatTime(
+                        timestamps.find((t) => t.step_id === i)?.starts_at || 0
+                      )}
+                    />
+                    <TextInput
+                      readOnly
+                      label={t("Recipe.title_video_stops_at")}
+                      className="w-full"
+                      disabled={!timestamps.find((t) => t.step_id === i)}
+                      value={formatTime(
+                        timestamps.find((t) => t.step_id === i)?.stops_at || 0
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+
+          <Button
+            className="self-end mt-6 mb-4"
+            onClick={() => {
+              // Update steps
+              stepsArray.fields.map((field, i) => {
+                stepsArray.update(i, {
+                  ...field,
+                  video_starts_at: timestamps.find((t) => t.step_id === i)
+                    ?.starts_at,
+                  video_stops_at: timestamps.find((t) => t.step_id === i)
+                    ?.stops_at,
+                });
+              });
+
+              setTimestamps([]);
+              setPlaying(false);
+              close();
+            }}
+          >
+            {t("button_submit")}
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 });
