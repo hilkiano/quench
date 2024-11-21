@@ -34,6 +34,13 @@
     "Toast": {
       "loading": "Harap menunggu...",
       "error": "Terjadi kesalahan: {message}"
+    },
+    "Menu": {
+      "home": "Beranda",
+      "recipes": "Resep",
+      "browse_recipe": "Cari Resep",
+      "create_recipe": "Buat Resep",
+      "settings": "Pengaturan"
     }
   },
   "Homepage": {
@@ -43,14 +50,20 @@
     },
     "search_placeholder": "Apa yang mau Anda buat hari ini?",
     "header": "Hi, <gradient>{user}!</gradient>",
-    "subheader": "Sudah siap untuk membuat kopi?"
+    "subheader": "Sudah siap untuk membuat kopi?",
+    "menu_browse_recipe": "Telusuri Resep",
+    "menu_browse_recipe_desc": "Cari resep yang berasal dari berbagai pengguna",
+    "menu_create_recipe": "Buat Resep",
+    "menu_create_recipe_desc": "Buat resep Anda sendiri dan biarkan orang lain mencoba kreasi Anda"
   },
   "Create": {
     "Meta": {
       "title": "Quench App | Buat resep baru",
       "description": "Bagikan resep buatan Anda kepada dunia."
     },
-    "title": "Buat resep baru"
+    "title": "Buat resep baru",
+    "overlay_title": "Tunggu sebentar!",
+    "overlay_body": "Anda harus mendapat otorisasi sebelum mengirimkan resep baru."
   },
   "Recipe": {
     "List": {

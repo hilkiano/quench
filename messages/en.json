@@ -34,6 +34,13 @@
     "Toast": {
       "loading": "Please wait...",
       "error": "Error encountered: {message}"
+    },
+    "Menu": {
+      "home": "Home",
+      "recipes": "Recipes",
+      "browse_recipe": "Browse Recipe",
+      "create_recipe": "Create Recipe",
+      "settings": "Settings"
     }
   },
   "Homepage": {
@@ -43,14 +50,20 @@
     },
     "search_placeholder": "What would you like to brew today?",
     "header": "Hi, <gradient>{user}!</gradient>",
-    "subheader": "Ready to make some coffee?"
+    "subheader": "Ready to make some coffee?",
+    "menu_browse_recipe": "Browse Recipe",
+    "menu_browse_recipe_desc": "Search for recipe that come from various users",
+    "menu_create_recipe": "Create Recipe",
+    "menu_create_recipe_desc": "Create your own recipe and let the others try your creation"
   },
   "Create": {
     "Meta": {
       "title": "Quench App | Make new recipe",
       "description": "Share your own recipe to the world."
     },
-    "title": "Make new recipe"
+    "title": "Make new recipe",
+    "overlay_title": "Hold up a second!",
+    "overlay_body": "You have to be authorized before submitting a new recipe."
   },
   "Recipe": {
     "List": {

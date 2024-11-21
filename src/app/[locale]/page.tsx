@@ -40,7 +40,9 @@ function HomepageContent({ queryClient }: THomepageContent) {
   const messages = useMessages();
 
   return (
-    <NextIntlClientProvider messages={pick(messages, ["Common", "Homepage"])}>
+    <NextIntlClientProvider
+      messages={pick(messages, ["Common", "Homepage", "Settings"])}
+    >
       <HydrationBoundary state={dehydrate(queryClient)}>
         <HomepageContainer />
       </HydrationBoundary>

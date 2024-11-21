@@ -1,16 +1,66 @@
 "use client";
 
-import { Box, BoxProps, Paper, Text } from "@mantine/core";
+import { Box, BoxProps, Button, Paper, Text } from "@mantine/core";
 import { forwardRef } from "react";
 import { useTranslations } from "next-intl";
-import { IconLanguage, IconSunMoon } from "@tabler/icons-react";
+import { IconLanguage, IconLogout2, IconSunMoon } from "@tabler/icons-react";
 import ColorSchemeSelector from "./ColorSchemeSelector";
 import LocaleToggle from "./LocaleToggle";
-import AuthCard from "./AuthCard";
+import { useUserContext } from "@/libs/user.provider";
+import { useMutation } from "@tanstack/react-query";
+import { handleLogout } from "@/services/auth.service";
+import { useRouter } from "@/i18n/routing";
+import { modals } from "@mantine/modals";
 
 const SettingsContainer = forwardRef<HTMLDivElement, BoxProps>(
   ({ ...props }, ref) => {
+    const tCommon = useTranslations("Common");
     const t = useTranslations("Settings");
+    const router = useRouter();
+
+    const { userData, setUserData } = useUserContext();
+
+    const logout = useMutation({
+      mutationFn: handleLogout,
+      onSuccess: (res) => {
+        if (res.status) {
+          router.push("/");
+          setUserData(null);
+        }
+      },
+    });
+
+    const showLogoutConfirmation = () => {
+      modals.openConfirmModal({
+        withCloseButton: false,
+        title: t("items_title_logout"),
+        children: (
+          <div className="flex flex-col items-center justify-center gap-4 mb-12">
+            <Text className="leading-none text-xl font-mulish font-bold">
+              {tCommon("are_you_sure")}
+            </Text>
+          </div>
+        ),
+        labels: {
+          confirm: tCommon("Button.yes"),
+          cancel: tCommon("Button.no"),
+        },
+        confirmProps: {
+          radius: "xl",
+          color: "red",
+        },
+        cancelProps: {
+          variant: "transparent",
+          color: "default",
+        },
+        centered: true,
+        classNames: {
+          header: "justify-center",
+        },
+        onCancel: () => {},
+        onConfirm: () => logout.mutate(),
+      });
+    };
 
     const settings: SettingItem[] = [
       {
@@ -22,7 +72,10 @@ const SettingsContainer = forwardRef<HTMLDivElement, BoxProps>(
             description: t("items_desc_theme"),
             icon: <IconSunMoon />,
             handler: (
-              <ColorSchemeSelector className="w-full xs:w-auto self-start md:self-auto" />
+              <ColorSchemeSelector
+                size="lg"
+                className="w-full xs:w-auto self-start md:self-auto"
+              />
             ),
           },
           {
@@ -30,7 +83,32 @@ const SettingsContainer = forwardRef<HTMLDivElement, BoxProps>(
             description: t("items_desc_language"),
             icon: <IconLanguage />,
             handler: (
-              <LocaleToggle className="w-full xs:w-auto self-start md:self-auto" />
+              <LocaleToggle
+                size="lg"
+                className="w-full xs:w-auto self-start md:self-auto"
+              />
+            ),
+          },
+        ],
+      },
+      {
+        label: t("label_session"),
+        show: !!userData,
+        items: [
+          {
+            title: t("items_title_logout"),
+            description: t("items_desc_logout"),
+            icon: <IconLogout2 />,
+            handler: (
+              <Button
+                radius="md"
+                color="red"
+                variant="light"
+                className="w-full xs:w-auto self-start md:self-auto"
+                onClick={showLogoutConfirmation}
+              >
+                {t("items_title_logout")}
+              </Button>
             ),
           },
         ],
@@ -43,7 +121,7 @@ const SettingsContainer = forwardRef<HTMLDivElement, BoxProps>(
           <h2 className="font-zzz antialiased opacity-80 m-0 text-3xl xs:text-4xl font-light">
             {t("title")}
           </h2>
-          <AuthCard />
+          {/* <AuthCard /> */}
         </div>
 
         <div className="flex flex-col gap-4 w-full">

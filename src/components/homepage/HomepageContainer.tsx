@@ -10,36 +10,41 @@ import { SettingSvg } from "../Svgs";
 
 const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
   ({ ...props }, ref) => {
+    const tSettings = useTranslations("Settings");
     const t = useTranslations("Homepage");
     const { userData } = useUserContext();
     return (
       <Box {...props}>
-        <Center className="flex flex-col gap-4 h-screen">
-          <Text className="text-xl md:text-2xl font-zzz break-all">
-            {t.rich("header", {
-              user: userData?.user.email || "Guest",
-              gradient: (chunks) => (
-                <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 inline-block text-transparent bg-clip-text">
-                  {chunks}
-                </span>
-              ),
-            })}
-          </Text>
-          <Text className="text-3xl md:text-4xl font-zzz -mt-2">
-            {t("subheader")}
-          </Text>
+        <Center className="flex flex-col gap-4 h-screen py-6">
+          <div className="flex flex-col gap-4 ">
+            <Text className="text-2xl md:text-3xl font-zzz break-all">
+              {t.rich("header", {
+                user: userData?.user.email || "Guest",
+                gradient: (chunks) => (
+                  <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 inline-block text-transparent bg-clip-text">
+                    {chunks}
+                  </span>
+                ),
+              })}
+            </Text>
+            <Text className="text-3xl md:text-4xl font-zzz -mt-2">
+              {t("subheader")}
+            </Text>
+          </div>
           <div className="flex flex-col gap-4 mt-8">
             <Card
               component={Link}
               href="/recipe/list"
-              className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 transition-colors"
+              className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 drop-shadow-lg hover:drop-shadow-xl"
             >
               <div className="flex gap-4 items-center">
                 <IconSearch color="orange" />
                 <div className="flex flex-col">
-                  <Text className="font-zzz text-lg">Browse Recipe</Text>
+                  <Text className="font-zzz text-lg">
+                    {t("menu_browse_recipe")}
+                  </Text>
                   <Text className="font-mulish leading-tight">
-                    Search for recipe that come from various users
+                    {t("menu_browse_recipe_desc")}
                   </Text>
                 </div>
               </div>
@@ -47,14 +52,16 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
             <Card
               component={Link}
               href="/create"
-              className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 transition-colors"
+              className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 drop-shadow-lg hover:drop-shadow-xl"
             >
               <div className="flex gap-4 items-center">
-                <IconPlus color="orange" />
+                <IconPlus size={40} color="orange" />
                 <div className="flex flex-col">
-                  <Text className="font-zzz text-lg">Create Recipe</Text>
+                  <Text className="font-zzz text-lg">
+                    {t("menu_create_recipe")}
+                  </Text>
                   <Text className="font-mulish leading-tight">
-                    Create your own recipe and let the others try your creation
+                    {t("menu_create_recipe_desc")}
                   </Text>
                 </div>
               </div>
@@ -62,11 +69,11 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
             <Card
               component={Link}
               href="/settings"
-              className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 transition-colors"
+              className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 drop-shadow-lg hover:drop-shadow-xl"
             >
               <div className="flex gap-4 items-center">
                 <SettingSvg width={18} height={18} />
-                <Text className="font-zzz text-lg">Settings</Text>
+                <Text className="font-zzz text-lg">{tSettings("title")}</Text>
               </div>
             </Card>
           </div>
