@@ -9,7 +9,6 @@ import "@mantine/core/styles.layer.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/carousel/styles.css";
 import "@/styles/layout.css";
-import "@/styles/globals.css";
 import { mulishFont, zzzFont, fredokaFont } from "@/styles/fonts";
 import UserProvider from "@/libs/user.provider";
 import { ModalsProvider } from "@mantine/modals";
@@ -36,6 +35,7 @@ export default async function RootLayout({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body
         className={`${fredokaFont.variable} ${zzzFont.variable} ${mulishFont.variable} font-sans antialiased bg-[url('/images/bg.svg')] bg-cover bg-no-repeat bg-center bg-fixed`}

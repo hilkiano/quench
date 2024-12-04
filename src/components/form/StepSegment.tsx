@@ -216,7 +216,11 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
 
         <Modal
           opened={opened}
-          onClose={close}
+          onClose={() => {
+            close();
+            setUpdateData(undefined);
+            setUpdateIndex(undefined);
+          }}
           title={
             typeof updateIndex !== "undefined"
               ? t("Recipe.modal_title_update_step")

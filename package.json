@@ -23,6 +23,7 @@
     "@tanstack/react-table": "^8.20.5",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
+    "compressorjs": "^1.2.1",
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^7.1.0",
     "lodash": "^4.17.21",

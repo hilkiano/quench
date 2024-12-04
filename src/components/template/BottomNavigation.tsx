@@ -1,10 +1,12 @@
 import { Link, usePathname } from "@/i18n/routing";
+import { useUserContext } from "@/libs/user.provider";
 import { cn } from "@/utils";
 import { ActionIcon, Box, BoxProps, UnstyledButton } from "@mantine/core";
 import {
   IconCirclePlus,
   IconCirclePlusFilled,
   IconHome,
+  IconLogin2,
   IconSettings,
   IconSettingsFilled,
   IconUser,
@@ -12,10 +14,12 @@ import {
   IconZoomFilled,
 } from "@tabler/icons-react";
 import { forwardRef } from "react";
+import Image from "next/image";
 
 const BottomNavigation = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
   const { className, ...boxProps } = props;
 
+  const { userData } = useUserContext();
   const pathname = usePathname();
 
   return (
@@ -91,9 +95,30 @@ const BottomNavigation = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
           type="button"
           className="inline-flex flex-col items-center justify-center px-5 rounded-s-xl group border-0"
           component={Link}
-          href="/profile"
+          passHref
+          href={
+            userData
+              ? "/profile"
+              : `${process.env.NEXT_PUBLIC_WEB_URL}auth/google?redirect=${pathname}`
+          }
         >
-          <IconUser size={32} className="opacity-60" />
+          {userData ? (
+            <Image
+              className={cn(
+                "p-0 rounded-full ring-2 ring-neutral-300 dark:ring-neutral-500",
+                {
+                  "ring-orange-300  dark:ring-orange-500":
+                    pathname.includes("/profile"),
+                }
+              )}
+              src={userData!.user.avatar_url}
+              alt="Bordered avatar"
+              width={32}
+              height={32}
+            />
+          ) : (
+            <IconLogin2 size={32} className="opacity-60" />
+          )}
         </UnstyledButton>
       </div>
     </Box>

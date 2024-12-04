@@ -2,13 +2,11 @@ import useRecipeForm, { TFormSchema } from "@/hooks/recipe_form.hooks";
 import {
   Badge,
   Button,
-  Checkbox,
   ComboboxItem,
   Modal,
   Paper,
   RangeSlider,
   Select,
-  Slider,
   TextInput,
 } from "@mantine/core";
 import { useTranslations } from "next-intl";
@@ -24,9 +22,8 @@ import IngredientForm from "./IngredientForm";
 import StepSegment from "./StepSegment";
 import { useMutation } from "@tanstack/react-query";
 import { createRecipe } from "@/services/recipe.service";
-import { cleanData, formatTime } from "@/libs/helpers";
+import { convertImage, formatTime } from "@/libs/helpers";
 import { toast } from "sonner";
-import { useUserContext } from "@/libs/user.provider";
 import FormTextInput from "../reusable/FormTextField";
 import FormTextarea from "../reusable/FormTextarea";
 import VideoPlayer from "../reusable/VideoPlayer";
@@ -35,15 +32,18 @@ import FormFileInput from "../reusable/FormFileInput";
 import { useDisclosure } from "@mantine/hooks";
 import { OnProgressProps } from "react-player/base";
 
+type TRecipeForm = {
+  recipeData?: Recipe;
+};
+
 const RecipeForm = forwardRef<
   HTMLFormElement,
-  FormHTMLAttributes<HTMLFormElement>
->(({ ...props }, ref) => {
+  FormHTMLAttributes<HTMLFormElement> & TRecipeForm
+>(({ recipeData, ...props }, ref) => {
   const tCommon = useTranslations("Common");
   const t = useTranslations("Form");
   const { form, queries } = useRecipeForm();
   const [loading, setLoading] = useState(false);
-  const { userData } = useUserContext();
   const [youtubeUrl, setYoutubeUrl] = useState<string>();
   const [duration, setDuration] = useState<number>();
 
@@ -120,7 +120,7 @@ const RecipeForm = forwardRef<
     }
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     const data = form.getValues();
     const formData = new FormData();
 
@@ -133,7 +133,19 @@ const RecipeForm = forwardRef<
       formData.append("youtube_url", data.youtube_url);
     }
     if (data.image) {
-      formData.append("image", data.image);
+      const convertedImage = await convertImage(
+        data.image,
+        data.image.name.replace(/\.[^/.]+$/, "")
+      )
+        .then((result) => {
+          return result;
+        })
+        .catch(() => {
+          toast.error("ERR_CONVERT_IMAGE");
+          return null;
+        });
+
+      formData.append("image", convertedImage!);
     }
     formData.append("steps", JSON.stringify(data.steps));
     formData.append("ingredients", JSON.stringify(data.ingredients));
@@ -142,6 +154,9 @@ const RecipeForm = forwardRef<
       loading: tCommon("Toast.loading"),
       success: (data) => {
         form.reset();
+        setTimeout(() => {
+          document.getElementById("clear-image-btn")?.click();
+        }, 100);
         setYoutubeUrl(undefined);
         return t.rich("Recipe.success_added", {
           emp: (chunks) => <span className="font-bold">{chunks}</span>,
@@ -155,6 +170,29 @@ const RecipeForm = forwardRef<
       },
     });
   };
+
+  useEffect(() => {
+    if (recipeData) {
+      form.setValue("title", recipeData.title);
+      form.setValue("method_id", String(recipeData.method_id));
+      form.setValue("description", recipeData.description);
+      // TODO: Image and youtube url
+      form.setValue("youtube_url", recipeData.youtube_url || "");
+      form.setValue(
+        "ingredients",
+        recipeData.ingredients
+          ? recipeData.ingredients.map((ingredient) => {
+              return {
+                name: ingredient.name,
+                quantity: ingredient.quantity,
+                unit: ingredient.unit_id,
+              };
+            })
+          : []
+      );
+      form.setValue("steps", recipeData.steps || []);
+    }
+  }, [form, recipeData]);
 
   return (
     <>
@@ -240,6 +278,9 @@ const RecipeForm = forwardRef<
                   accept="image/png,image/jpeg"
                   withPreview={form.getValues("image")}
                   error={form.formState.errors.image?.message}
+                  clearButtonProps={{
+                    id: "clear-image-btn",
+                  }}
                 />
               )}
             />

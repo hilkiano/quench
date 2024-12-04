@@ -6,6 +6,7 @@
     "dark_label": "Gelap",
     "en_label": "Bahasa Inggris",
     "id_label": "Bahasa Indonesia",
+    "search_placeholder": "Cari...",
     "Unit": {
       "gram": "g",
       "mililiter": "ml",
@@ -25,7 +26,9 @@
       "go_back": "Kembali",
       "login_google": "Login dengan Google",
       "create": "Buat baru",
-      "load": "Muat"
+      "load": "Muat",
+      "edit": "Perbarui",
+      "view": "Lihat"
     },
     "Error": {
       "403_title": "403 Forbidden",
@@ -59,11 +62,18 @@
   "Create": {
     "Meta": {
       "title": "Quench App | Buat resep baru",
-      "description": "Bagikan resep buatan Anda kepada dunia."
+      "description": "Bagikan resep buatanmu kepada dunia."
     },
     "title": "Buat resep baru",
     "overlay_title": "Tunggu sebentar!",
     "overlay_body": "Anda harus mendapat otorisasi sebelum mengirimkan resep baru."
+  },
+  "Edit": {
+    "Meta": {
+      "title": "Quench App | Ubah resep",
+      "description": "Ubah resep kamu."
+    },
+    "title": "Ubah resep"
   },
   "Recipe": {
     "List": {
@@ -71,6 +81,12 @@
         "title": "Quench App | Cari resep",
         "description": "Cari resep kopi apa pun atau bagikan kreasi Anda sendiri."
       }
+    },
+    "Card": {
+      "submitted": "Terkirim",
+      "hidden": "Tersembunyi",
+      "approved": "Disetujui",
+      "rejected": "Ditolak"
     }
   },
   "Settings": {
@@ -135,5 +151,13 @@
     },
     "button_draft": "Simpan sebagai draft",
     "button_submit": "Kirim"
+  },
+  "Profile": {
+    "Meta": {
+      "title": "Quench App",
+      "description": "Profil akun kamu."
+    },
+    "title": "Profil",
+    "my_recipe_title": "Resepku"
   }
 }

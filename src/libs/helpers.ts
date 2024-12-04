@@ -3,6 +3,7 @@ import {
   ColumnSort,
   PaginationState,
 } from "@tanstack/react-table";
+import Compressor from "compressorjs";
 
 export function cleanData<T>(data: T) {
   for (const key in data) {
@@ -74,4 +75,42 @@ export const formatTime = (seconds: number): string => {
   const formattedMinutes = minutes.toString().padStart(2, "0");
   const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+};
+
+export async function srcToFile(
+  src: string,
+  fileName: string,
+  mimeType: string
+) {
+  return fetch(src)
+    .then(function (res) {
+      return res.arrayBuffer();
+    })
+    .then(function (buf) {
+      return new File([buf], fileName, { type: mimeType });
+    });
+}
+
+export const convertImage = async (image: File, filename: string) => {
+  return new Promise<File | Blob>((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onloadend = async () => {
+      const string = reader.result;
+      if (string) {
+        const file = await srcToFile(
+          string as string,
+          `${filename}.webp`,
+          "image/webp"
+        );
+
+        new Compressor(file, {
+          quality: 0.6,
+          success: (result) => {
+            resolve(result);
+          },
+        });
+      }
+    };
+  });
 };

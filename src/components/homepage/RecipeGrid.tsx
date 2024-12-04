@@ -14,11 +14,13 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { ColumnFiltersState } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import RecipeCard from "../reusable/RecipeCard";
 
 const RecipeGrid = () => {
   const t = useTranslations("Recipe");
@@ -30,6 +32,12 @@ const RecipeGrid = () => {
   const [globalFilterColumns, setGlobalFilterColumns] = useState<string>(
     "id,title,description"
   );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+    {
+      id: "status",
+      value: "SUBMITTED",
+    },
+  ]);
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
 
@@ -39,10 +47,12 @@ const RecipeGrid = () => {
     queryFn: async ({ pageParam }) => {
       const fn = await getList<Recipe>({
         model: "Recipe",
+        relations: "user",
         ...generateListQueryParams({
           pagination: { pageSize: 20, pageIndex: pageParam as number },
           globalFilter,
           globalFilterColumns,
+          columnFilters,
         }),
       });
       return { ...fn.data, prevPage: pageParam };
@@ -105,14 +115,9 @@ const RecipeGrid = () => {
           </Center>
         }
       >
-        <div className="columns-1 sm:columns-2 gap-4 md:columns-3 lg:columns-4 space-y-4">
+        <div className="columns-1 sm:columns-2 gap-4 md:columns-3 space-y-4">
           {recipeList?.map((row, id) => (
-            <div
-              key={id}
-              className="p-4 rounded-lg drop-shadow-sm border-2 border-solid border-slate-300 break-inside-avoid-column"
-            >
-              {row.title}
-            </div>
+            <RecipeCard recipe={row} key={id} hideStatus withStats />
           ))}
         </div>
       </InfiniteScroll>

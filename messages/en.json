@@ -6,6 +6,7 @@
     "dark_label": "Dark",
     "en_label": "English",
     "id_label": "Indonesian",
+    "search_placeholder": "Search...",
     "Unit": {
       "gram": "g",
       "mililiter": "ml",
@@ -25,7 +26,9 @@
       "go_back": "Go back",
       "login_google": "Login with Google",
       "create": "Create",
-      "load": "Load"
+      "load": "Load",
+      "edit": "Edit",
+      "view": "View"
     },
     "Error": {
       "403_title": "403 Forbidden",
@@ -65,12 +68,25 @@
     "overlay_title": "Hold up a second!",
     "overlay_body": "You have to be authorized before submitting a new recipe."
   },
+  "Edit": {
+    "Meta": {
+      "title": "Quench App | Edit a recipe",
+      "description": "Edit your recipe."
+    },
+    "title": "Edit a recipe"
+  },
   "Recipe": {
     "List": {
       "Meta": {
         "title": "Quench App | Browse recipe",
         "description": "Search any coffee recipes or share your own creation."
       }
+    },
+    "Card": {
+      "submitted": "Submitted",
+      "hidden": "Hidden",
+      "approved": "Approved",
+      "rejected": "Rejected"
     }
   },
   "Settings": {
@@ -135,5 +151,13 @@
     },
     "button_draft": "Save as draft",
     "button_submit": "Submit"
+  },
+  "Profile": {
+    "Meta": {
+      "title": "Quench App",
+      "description": "Your account profile."
+    },
+    "title": "Profile",
+    "my_recipe_title": "My Recipe"
   }
 }

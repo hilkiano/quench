@@ -5,24 +5,14 @@ import {
   ActionIcon,
   AppShell,
   AppShellProps,
-  Avatar,
   Button,
-  Drawer,
   useMantineTheme,
 } from "@mantine/core";
 import Image from "next/image";
-import {
-  IconArrowLeft,
-  IconCirclePlus,
-  IconLogin,
-  IconLogin2,
-  IconUserCircle,
-  IconWriting,
-} from "@tabler/icons-react";
+import { IconArrowLeft, IconLogin2, IconWriting } from "@tabler/icons-react";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useUserContext } from "@/libs/user.provider";
 import { useHeadroom, useMediaQuery } from "@mantine/hooks";
-import { SettingSvg } from "../Svgs";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils";
 import BottomNavigation from "./BottomNavigation";
@@ -67,13 +57,15 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
 
     const SocialButton = () =>
       userData ? (
-        <Image
-          className="p-0 rounded-full ring-2 ring-orange-300 dark:ring-orange-500"
-          src={userData!.user.avatar_url}
-          alt="Bordered avatar"
-          width={40}
-          height={40}
-        />
+        <Link href="/profile" className="mt-2">
+          <Image
+            className="p-0 rounded-full ring-2 ring-orange-300 dark:ring-orange-500 hover:cursor-pointer"
+            src={userData!.user.avatar_url}
+            alt="Bordered avatar"
+            width={40}
+            height={40}
+          />
+        </Link>
       ) : (
         <ActionIcon
           size="xl"
@@ -96,7 +88,7 @@ const AppTemplate = forwardRef<HTMLDivElement, AppShellProps & TAppTemplate>(
       >
         <AppShell.Header
           withBorder={false}
-          className="bg-transparent backdrop-blur-lg border-solid border-b border-0 border-[var(--mantine-color-default-border)]"
+          className="border-solid border-b border-0 border-[var(--mantine-color-default-border)]"
         >
           <div className="max-w-[1000px] h-full flex justify-between items-center px-4 mr-auto ml-auto">
             {isMobile ? <BackNav /> : <HeaderMenu />}

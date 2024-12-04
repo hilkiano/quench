@@ -2,20 +2,54 @@
 
 import { Link } from "@/i18n/routing";
 import { useUserContext } from "@/libs/user.provider";
-import { Box, BoxProps, Card, Center, Text } from "@mantine/core";
+import {
+  Box,
+  BoxProps,
+  Card,
+  Center,
+  Text,
+  useMantineColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { SettingSvg } from "../Svgs";
+import Image from "next/image";
+import { useMediaQuery } from "@mantine/hooks";
+import { cn } from "@/utils";
 
 const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
   ({ ...props }, ref) => {
+    const tProfile = useTranslations("Profile");
     const tSettings = useTranslations("Settings");
     const t = useTranslations("Homepage");
     const { userData } = useUserContext();
+    const theme = useMantineTheme();
+    const [image, setImage] = useState<string>(
+      "/images/white/windows11/LargeTile.scale-400.png"
+    );
+    const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
+    const { colorScheme } = useMantineColorScheme();
+
+    useEffect(() => {
+      if (colorScheme === "dark" || colorScheme === "auto") {
+        setImage("/images/white/windows11/LargeTile.scale-400.png");
+      } else {
+        setImage("/images/black/windows11/LargeTile.scale-400.png");
+      }
+    }, [colorScheme]);
+
     return (
       <Box {...props}>
         <Center className="flex flex-col gap-4 h-screen py-6">
+          <Image
+            src={image}
+            alt="logo"
+            width={isMobile ? 140 : 200}
+            height={isMobile ? 140 : 200}
+            className="opacity-50"
+          />
           <div className="flex flex-col gap-4 ">
             <Text className="text-2xl md:text-3xl font-zzz break-all">
               {t.rich("header", {
@@ -71,11 +105,31 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
               href="/settings"
               className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 drop-shadow-lg hover:drop-shadow-xl"
             >
-              <div className="flex gap-4 items-center">
-                <SettingSvg width={18} height={18} />
+              <div className="ml-1 flex gap-4 items-center">
+                <SettingSvg width={20} height={20} />
                 <Text className="font-zzz text-lg">{tSettings("title")}</Text>
               </div>
             </Card>
+            {userData?.user && (
+              <Card
+                component={Link}
+                href="/profile"
+                className="rounded-xl max-w-[400px] hover:outline-2 outline outline-offset-4 outline-orange-500 drop-shadow-lg hover:drop-shadow-xl"
+              >
+                <div className="flex gap-4 items-center">
+                  <Image
+                    className={cn(
+                      "p-0 rounded-full ring-2 ring-orange-300  dark:ring-orange-500"
+                    )}
+                    src={userData!.user.avatar_url}
+                    alt="Bordered avatar"
+                    width={32}
+                    height={32}
+                  />
+                  <Text className="font-zzz text-lg">{tProfile("title")}</Text>
+                </div>
+              </Card>
+            )}
           </div>
         </Center>
       </Box>

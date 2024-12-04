@@ -41,7 +41,7 @@ function HomepageContent({ queryClient }: THomepageContent) {
 
   return (
     <NextIntlClientProvider
-      messages={pick(messages, ["Common", "Homepage", "Settings"])}
+      messages={pick(messages, ["Common", "Homepage", "Settings", "Profile"])}
     >
       <HydrationBoundary state={dehydrate(queryClient)}>
         <HomepageContainer />

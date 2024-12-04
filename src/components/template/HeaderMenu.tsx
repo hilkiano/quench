@@ -60,7 +60,7 @@ const HeaderMenu = forwardRef<HTMLDivElement, GroupProps>((props, ref) => {
         >
           <Menu.Target>
             <UnstyledButton
-              className="p-2 px-4 hover:dark:bg-neutral-100/5 hover:bg-neutral-800/5 rounded-lg"
+              className="p-2 px-4 rounded-lg hover:opacity-80"
               onClick={(event) => event.preventDefault()}
             >
               <Center className="flex gap-2">

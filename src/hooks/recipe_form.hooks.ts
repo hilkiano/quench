@@ -70,7 +70,7 @@ export default function useRecipeForm() {
       title: "",
       description: "",
       youtube_url: "",
-      method_id: "",
+      method_id: "1",
       image: undefined,
       steps: [],
       ingredients: [],
