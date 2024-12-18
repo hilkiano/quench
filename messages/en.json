@@ -28,7 +28,8 @@
       "create": "Create",
       "load": "Load",
       "edit": "Edit",
-      "view": "View"
+      "view": "View",
+      "crop": "Crop image"
     },
     "Error": {
       "403_title": "403 Forbidden",
@@ -131,6 +132,7 @@
       "title_step": "Explain the details what needs to be done",
       "step": "Step #{order}",
       "success_added": "Recipe <emp>{name}</emp> was sent successfully. Your recipe will appear on the home screen after getting approved by admin.",
+      "success_updated": "Recipe <emp>{name}</emp> has been updated. Your recipe will appear on the home screen after getting approved by admin.",
       "title_method_id": "Method",
       "method_v60": "V60",
       "method_pour_over": "Pour over",

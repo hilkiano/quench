@@ -4,12 +4,14 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocale, useTranslations } from "next-intl";
-import { validateYouTubeUrl } from "@/libs/helpers";
+import { blobToFile, validateYouTubeUrl } from "@/libs/helpers";
 import { useQuery } from "@tanstack/react-query";
 import { methodKeys } from "@/utils";
 import { getComboboxData } from "@/services/data.service";
+import { CropperRef } from "react-advanced-cropper";
+import { useRef, useState } from "react";
 
-function FormSchema() {
+function FormSchema(isUpdate: boolean) {
   const t = useTranslations("Form");
   const locale = useLocale();
 
@@ -26,11 +28,23 @@ function FormSchema() {
     youtube_url: z.string().refine((url) => validateYouTubeUrl(url), {
       message: "Not a valid Youtube URL",
     }),
-    image: z.custom<File>(),
+    image: z.custom<File>().refine(
+      (file) => {
+        if (!isUpdate) {
+          return !!file;
+        } else {
+          return true;
+        }
+      },
+      {
+        message: t("Validation.required"),
+      }
+    ),
     method_id: z.string().min(1, t("Validation.required")),
     steps: z
       .array(
         z.object({
+          id: z.number().nullish(),
           step: z.string().min(1, t("Validation.required")),
           order: z.number(),
           timer_seconds: z.number().nullish(),
@@ -42,6 +56,7 @@ function FormSchema() {
     ingredients: z
       .array(
         z.object({
+          id: z.number().nullish(),
           name: z.string().min(1, t("Validation.required")),
           quantity: z.number(),
           unit: z.number(),
@@ -53,7 +68,7 @@ function FormSchema() {
 
 export type TFormSchema = z.infer<ReturnType<typeof FormSchema>>;
 
-export default function useRecipeForm() {
+export default function useRecipeForm(isUpdate: boolean) {
   const methodQuery = useQuery({
     queryKey: methodKeys.all,
     queryFn: () =>
@@ -65,7 +80,7 @@ export default function useRecipeForm() {
   });
 
   const form = useForm<TFormSchema>({
-    resolver: zodResolver(FormSchema()),
+    resolver: zodResolver(FormSchema(isUpdate)),
     defaultValues: {
       title: "",
       description: "",
@@ -77,10 +92,36 @@ export default function useRecipeForm() {
     },
   });
 
+  const [uploadedImage, setUploadedImage] = useState<string>();
+  const [cropperImage, setCropperImage] = useState<File>();
+  const [imageName, setImageName] = useState<string>();
+  const cropperRef = useRef<CropperRef>(null);
+
+  const onCrop = () => {
+    if (cropperRef.current) {
+      const canvas = cropperRef.current.getCanvas();
+      if (canvas) {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            form.setValue("image", blobToFile(blob, imageName ?? ""));
+          }
+        });
+      }
+    }
+  };
+
   return {
     form,
     queries: {
       methodQuery,
     },
+    cropperRef,
+    onCrop,
+    cropperImage,
+    setCropperImage,
+    imageName,
+    setImageName,
+    uploadedImage,
+    setUploadedImage,
   };
 }

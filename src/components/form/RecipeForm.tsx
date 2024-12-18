@@ -21,7 +21,7 @@ import { Controller, useFieldArray } from "react-hook-form";
 import IngredientForm from "./IngredientForm";
 import StepSegment from "./StepSegment";
 import { useMutation } from "@tanstack/react-query";
-import { createRecipe } from "@/services/recipe.service";
+import { createRecipe, updateRecipe } from "@/services/recipe.service";
 import { convertImage, formatTime } from "@/libs/helpers";
 import { toast } from "sonner";
 import FormTextInput from "../reusable/FormTextField";
@@ -31,6 +31,10 @@ import YouTubePlayer from "react-player/youtube";
 import FormFileInput from "../reusable/FormFileInput";
 import { useDisclosure } from "@mantine/hooks";
 import { OnProgressProps } from "react-player/base";
+import { RectangleStencil, Cropper } from "react-advanced-cropper";
+import { IconCrop } from "@tabler/icons-react";
+import Image from "next/image";
+import { useRouter } from "@/i18n/routing";
 
 type TRecipeForm = {
   recipeData?: Recipe;
@@ -42,12 +46,26 @@ const RecipeForm = forwardRef<
 >(({ recipeData, ...props }, ref) => {
   const tCommon = useTranslations("Common");
   const t = useTranslations("Form");
-  const { form, queries } = useRecipeForm();
+  const {
+    form,
+    queries,
+    cropperRef,
+    onCrop,
+    cropperImage,
+    setCropperImage,
+    setImageName,
+    uploadedImage,
+    setUploadedImage,
+  } = useRecipeForm(!!recipeData);
   const [loading, setLoading] = useState(false);
   const [youtubeUrl, setYoutubeUrl] = useState<string>();
   const [duration, setDuration] = useState<number>();
 
   const [opened, { open, close }] = useDisclosure(false);
+  const [cropperOpened, { open: cropperOpen, close: cropperClose }] =
+    useDisclosure(false);
+
+  const router = useRouter();
 
   const [timestamps, setTimestamps] = useState<
     {
@@ -104,6 +122,14 @@ const RecipeForm = forwardRef<
 
   const create = useMutation({
     mutationFn: createRecipe,
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSettled: () => setLoading(false),
+  });
+
+  const update = useMutation({
+    mutationFn: updateRecipe,
     onMutate: () => {
       setLoading(true);
     },
@@ -171,18 +197,69 @@ const RecipeForm = forwardRef<
     });
   };
 
+  const handleUpdate = async () => {
+    const data = form.getValues();
+
+    const formData = new FormData();
+
+    formData.append("id", data.id!);
+    formData.append("title", data.title);
+    formData.append("method_id", data.method_id);
+    if (data.description) {
+      formData.append("description", data.description);
+    }
+    if (data.youtube_url) {
+      formData.append("youtube_url", data.youtube_url);
+    }
+    if (data.image) {
+      const convertedImage = await convertImage(
+        data.image,
+        data.image.name.replace(/\.[^/.]+$/, "")
+      )
+        .then((result) => {
+          return result;
+        })
+        .catch(() => {
+          toast.error("ERR_CONVERT_IMAGE");
+          return null;
+        });
+
+      formData.append("image", convertedImage!);
+    }
+    formData.append("steps", JSON.stringify(data.steps));
+    formData.append("ingredients", JSON.stringify(data.ingredients));
+
+    toast.promise(update.mutateAsync(formData), {
+      loading: tCommon("Toast.loading"),
+      success: (data) => {
+        router.push("/profile");
+        return t.rich("Recipe.success_updated", {
+          emp: (chunks) => <span className="font-bold">{chunks}</span>,
+          name: data.title,
+        });
+      },
+      error: (error: Error) => {
+        return tCommon("Toast.error", {
+          message: error.message,
+        });
+      },
+    });
+  };
+
   useEffect(() => {
     if (recipeData) {
+      setUploadedImage(recipeData.image_url);
+      form.setValue("id", recipeData.id);
       form.setValue("title", recipeData.title);
       form.setValue("method_id", String(recipeData.method_id));
       form.setValue("description", recipeData.description);
-      // TODO: Image and youtube url
       form.setValue("youtube_url", recipeData.youtube_url || "");
       form.setValue(
         "ingredients",
         recipeData.ingredients
           ? recipeData.ingredients.map((ingredient) => {
               return {
+                id: ingredient.id,
                 name: ingredient.name,
                 quantity: ingredient.quantity,
                 unit: ingredient.unit_id,
@@ -190,9 +267,14 @@ const RecipeForm = forwardRef<
             })
           : []
       );
-      form.setValue("steps", recipeData.steps || []);
+      if (recipeData.steps) {
+        form.setValue(
+          "steps",
+          recipeData.steps.sort((a, b) => a.order - b.order) || []
+        );
+      }
     }
-  }, [form, recipeData]);
+  }, [form, recipeData, setUploadedImage]);
 
   return (
     <>
@@ -200,12 +282,17 @@ const RecipeForm = forwardRef<
         ref={ref}
         onSubmit={form.handleSubmit((data) => {
           reorderStep(data);
-          handleCreate();
+
+          if (recipeData) {
+            handleUpdate();
+          } else {
+            handleCreate();
+          }
         })}
         {...props}
       >
         <div className="flex flex-col gap-6 sm:flex-row w-full">
-          <div className="flex flex-col gap-4 w-full sm:w-1/2">
+          <div className="flex flex-col gap-4 w-full sm:w-1/2 shrink-0">
             <Controller
               control={form.control}
               name="method_id"
@@ -272,11 +359,25 @@ const RecipeForm = forwardRef<
                 <FormFileInput
                   clearable
                   label="Cover image"
-                  onChange={onChange}
+                  onChange={(file) => {
+                    if (file) {
+                      setImageName(file.name);
+                      setCropperImage(file);
+                      cropperOpen();
+                    } else {
+                      setImageName(undefined);
+                      setCropperImage(undefined);
+                      onChange(file);
+                    }
+                  }}
                   value={value}
                   size="lg"
                   accept="image/png,image/jpeg"
-                  withPreview={form.getValues("image")}
+                  withPreview={
+                    form.getValues("image")
+                      ? URL.createObjectURL(form.getValues("image"))
+                      : uploadedImage
+                  }
                   error={form.formState.errors.image?.message}
                   clearButtonProps={{
                     id: "clear-image-btn",
@@ -547,6 +648,44 @@ const RecipeForm = forwardRef<
             {t("button_submit")}
           </Button>
         </div>
+      </Modal>
+
+      <Modal
+        opened={cropperOpened}
+        onClose={() => {
+          cropperClose();
+          setCropperImage(undefined);
+          setImageName(undefined);
+        }}
+        title="Crop Image"
+        size="xl"
+      >
+        {cropperImage ? (
+          <div className="relative">
+            <Cropper
+              ref={cropperRef}
+              stencilComponent={RectangleStencil}
+              stencilProps={{
+                aspectRatio: 1 / 1,
+              }}
+              src={URL.createObjectURL(cropperImage)}
+              className="w-full rounded-xl xs:h-[calc(100vh-350px)] h-[calc(100vh-180px)]"
+            />
+            <Button
+              variant="gradient"
+              onClick={() => {
+                cropperClose();
+                onCrop();
+              }}
+              leftSection={<IconCrop />}
+              className="absolute bottom-2 right-2 rounded-xl"
+            >
+              {tCommon("Button.crop")}
+            </Button>
+          </div>
+        ) : (
+          <></>
+        )}
       </Modal>
     </>
   );

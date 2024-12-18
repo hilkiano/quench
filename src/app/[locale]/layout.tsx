@@ -8,6 +8,8 @@ import "@/styles/globals.css";
 import "@mantine/core/styles.layer.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/carousel/styles.css";
+import "react-advanced-cropper/dist/style.css";
+import "react-advanced-cropper/dist/themes/compact.css";
 import "@/styles/layout.css";
 import { mulishFont, zzzFont, fredokaFont } from "@/styles/fonts";
 import UserProvider from "@/libs/user.provider";

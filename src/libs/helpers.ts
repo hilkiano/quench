@@ -114,3 +114,27 @@ export const convertImage = async (image: File, filename: string) => {
     };
   });
 };
+
+export const blobToFile = (theBlob: Blob, fileName: string): File => {
+  const b: any = theBlob;
+  b.lastModifiedDate = new Date();
+  b.name = fileName;
+
+  return theBlob as File;
+};
+
+export const toDataURL = (url: string) =>
+  fetch(url, {
+    mode: "no-cors",
+  })
+    .then((response) => response.blob())
+    .then(
+      (blob) =>
+        new Promise((resolve, reject) => {
+          console.log("blob", blob);
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        })
+    );

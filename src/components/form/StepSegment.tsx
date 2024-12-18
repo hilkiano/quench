@@ -25,10 +25,9 @@ import {
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useState } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
 import StepForm from "./StepForm";
-import YouTubePlayer from "react-player/youtube";
 
 type TStepSegment = {
   stepsArray: UseFieldArrayReturn<TFormSchema, "steps", "step_field_id">;

@@ -28,7 +28,8 @@
       "create": "Buat baru",
       "load": "Muat",
       "edit": "Perbarui",
-      "view": "Lihat"
+      "view": "Lihat",
+      "crop": "Potong gambar"
     },
     "Error": {
       "403_title": "403 Forbidden",
@@ -131,6 +132,7 @@
       "title_step": "Jelaskan secara detail apa yang perlu dilakukan",
       "step": "Langkah #{order}",
       "success_added": "Resep <emp>{name}</emp> berhasil dikirim. Resep akan tampil di halaman utama setelah disetujui admin.",
+      "success_updated": "Resep <emp>{name}</emp> sudah diperbarui. Resep akan tampil di halaman utama setelah disetujui admin.",
       "title_method_id": "Metode",
       "method_v60": "V60",
       "method_pour_over": "Pour over",

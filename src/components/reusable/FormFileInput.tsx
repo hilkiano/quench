@@ -9,9 +9,10 @@ import { modals } from "@mantine/modals";
 import { forwardRef } from "react";
 import Image from "next/image";
 import { useMediaQuery } from "@mantine/hooks";
+import { IconPhoto } from "@tabler/icons-react";
 
 type TFormFileInput = {
-  withPreview?: File;
+  withPreview?: string;
 };
 
 const FormFileInput = forwardRef<
@@ -27,7 +28,7 @@ const FormFileInput = forwardRef<
       children: withPreview && (
         <Image
           className="rounded-lg"
-          src={URL.createObjectURL(withPreview)}
+          src={withPreview}
           alt="cover image"
           sizes="100vw"
           style={{
@@ -40,21 +41,18 @@ const FormFileInput = forwardRef<
       ),
       withCloseButton: false,
       centered: isMobile,
+      classNames: {
+        body: "flex",
+      },
     });
   };
 
   const Preview = () =>
-    withPreview && (
-      <Avatar
-        onClick={showImage}
-        radius="md"
-        src={URL.createObjectURL(withPreview)}
-      />
-    );
+    withPreview && <Avatar onClick={showImage} radius="md" src={withPreview} />;
 
   return (
     <FileInput
-      leftSection={withPreview ? <Preview /> : <></>}
+      leftSection={withPreview ? <Preview /> : <IconPhoto />}
       className={cn("", className)}
       ref={ref}
       {...inputProps}
