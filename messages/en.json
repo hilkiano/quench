@@ -77,6 +77,17 @@
     "title": "Edit a recipe"
   },
   "Recipe": {
+    "updated_at": "Last updated at {date}",
+    "no_description": "No description provided",
+    "with_video": "With video",
+    "without_video": "Without video",
+    "ingredients": "Ingredients",
+    "servings": "Servings",
+    "btn_start": "Start brewing",
+    "Meta": {
+      "title": "Quench App | {recipe}",
+      "description": "View {title} - {description}"
+    },
     "List": {
       "Meta": {
         "title": "Quench App | Browse recipe",
@@ -88,7 +99,9 @@
       "hidden": "Hidden",
       "approved": "Approved",
       "rejected": "Rejected"
-    }
+    },
+    "steps": "Steps",
+    "btn_dismiss": "Dismiss"
   },
   "Settings": {
     "Meta": {

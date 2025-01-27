@@ -27,6 +27,7 @@ const EditContainer = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
         relations: "steps&ingredients",
       }),
     refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 
   return (

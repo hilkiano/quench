@@ -126,8 +126,10 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
                                   {t("Recipe.step", { order: i + 1 })}
                                 </Badge>
                                 <div
-                                  className={`flex absolute bottom-2 ${
-                                    isMobile ? "right-2" : "left-2"
+                                  className={`flex absolute ${
+                                    isMobile
+                                      ? "left-[9.75rem] top-[0.7rem]"
+                                      : "left-2 bottom-2"
                                   }`}
                                 >
                                   {s.video_starts_at && s.video_stops_at && (
@@ -233,6 +235,7 @@ const StepSegment = forwardRef<HTMLDivElement, PaperProps & TStepSegment>(
                 stepsArray.update(updateIndex, {
                   ...updateData,
                   step: data.step,
+                  timer_seconds: data.timer_seconds || undefined,
                 });
               } else {
                 stepsArray.append({

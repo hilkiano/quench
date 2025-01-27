@@ -77,6 +77,17 @@
     "title": "Ubah resep"
   },
   "Recipe": {
+    "updated_at": "Terakhir diperbarui pada {date}",
+    "no_description": "Tidak ada deskripsi yang diberikan",
+    "with_video": "Dengan video",
+    "without_video": "Tanpa video",
+    "ingredients": "Bahan-bahan",
+    "servings": "Sajian",
+    "btn_start": "Mulai membuat",
+    "Meta": {
+      "title": "Quench App | {recipe}",
+      "description": "View {title} - {description}"
+    },
     "List": {
       "Meta": {
         "title": "Quench App | Cari resep",
@@ -88,7 +99,9 @@
       "hidden": "Tersembunyi",
       "approved": "Disetujui",
       "rejected": "Ditolak"
-    }
+    },
+    "steps": "Langkah-langkah",
+    "btn_dismiss": "Matikan"
   },
   "Settings": {
     "Meta": {

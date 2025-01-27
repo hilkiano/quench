@@ -111,7 +111,10 @@ type Recipe = {
   deleted_by: string;
   user?: User;
   steps?: RecipeStep[];
+  meta?: RecipeMeta;
+  comments?: RecipeComment[];
   ingredients?: RecipeIngredient[];
+  method?: RecipeMethod;
 };
 
 type RecipeStep = {
@@ -120,6 +123,9 @@ type RecipeStep = {
   image_url: string;
   step: string;
   order: number;
+  timer_seconds: number;
+  video_starts_at: number;
+  video_stops_at: number;
   created_at: Date | string;
   updated_at: Date | string;
   created_by: string;
@@ -137,4 +143,42 @@ type RecipeIngredient = {
   updated_at: Date | string;
   created_by: string;
   updated_by: string;
+  unit?: UnitType;
+};
+
+type UnitType = {
+  id: number;
+  name: string;
+  abbreviation: string;
+  created_at: Date | string;
+  updated_at: Date | string;
+};
+
+type RecipeMeta = {
+  id: number;
+  recipe_id: string;
+  likes: number;
+  views: number;
+  created_at: Date | string;
+  updated_at: Date | string;
+  created_by: string;
+  updated_by: string;
+};
+
+type RecipeComment = {
+  id: number;
+  recipe_id: string;
+  comment: string;
+  comment_id: number;
+  created_at: Date | string;
+  updated_at: Date | string;
+  created_by: string;
+  updated_by: string;
+};
+
+type RecipeMethod = {
+  id: number;
+  name: string;
+  created_at: Date | string;
+  updated_at: Date | string;
 };

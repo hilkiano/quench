@@ -18,9 +18,10 @@ import { ColumnFiltersState } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useQueryState } from "nuqs";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import RecipeCard from "../reusable/RecipeCard";
+import RecipeFilter from "../reusable/RecipeFilter";
 
 const RecipeGrid = () => {
   const t = useTranslations("Recipe");
@@ -72,39 +73,21 @@ const RecipeGrid = () => {
       return [...acc, ...page.rows];
     }, []) || [];
 
+  const searchRef = useRef<HTMLInputElement>(null);
+
   return (
     <div className="flex flex-col gap-4 mb-12">
-      <div className="sticky -mx-2 xs:-mx-4 top-14 xs:top-20 bg-[var(--mantine-color-body)] z-10 p-2 xs:p-4">
-        <form
+      <div className="sticky -mx-2 xs:-mx-4 top-[3.7rem] bg-[var(--mantine-color-body)] z-10 p-2 xs:p-4">
+        <RecipeFilter
+          ref={searchRef}
           onSubmit={(e) => {
             e.preventDefault();
-
-            setGlobalFilter(q);
-            queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+            queryClient.invalidateQueries({
+              queryKey: recipeKeys.lists(),
+            });
+            setGlobalFilter(searchRef.current?.value || "");
           }}
-        >
-          <TextInput
-            classNames={{
-              root: "my-0 xs:my-4",
-              input: "rounded-full",
-            }}
-            size={isMobile ? "md" : "xl"}
-            value={q || ""}
-            onChange={(event) => setQ(event.currentTarget.value)}
-            placeholder="Search..."
-            rightSection={
-              <ActionIcon
-                aria-label="Search recipe"
-                id="search-recipe-btn"
-                size={isMobile ? "md" : "xl"}
-                radius="xl"
-                type="submit"
-              >
-                <IconSearch size={isMobile ? 16 : 24} />
-              </ActionIcon>
-            }
-          />
-        </form>
+        />
       </div>
       <InfiniteScroll
         loadMore={() => fetchNextPage()}

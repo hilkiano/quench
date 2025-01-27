@@ -15,24 +15,19 @@ import {
 } from "@mantine/core";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnFiltersState } from "@tanstack/react-table";
-import { useSearchParams } from "next/navigation";
-import { useQueryState } from "nuqs";
-import { forwardRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import RecipeCard from "../reusable/RecipeCard";
 import { IconSearch } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import RecipeFilter from "../reusable/RecipeFilter";
 
 const MyRecipeContainer = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
   const { className, ...boxProps } = props;
   const tCommon = useTranslations("Common");
   const t = useTranslations("Profile");
-  const [q, setQ] = useQueryState("q", { defaultValue: "" });
   const { userData } = useUserContext();
-  const params = useSearchParams();
-  const [globalFilter, setGlobalFilter] = useState<string>(
-    params.get("q") ?? ""
-  );
+  const [globalFilter, setGlobalFilter] = useState<string>("");
   const [globalFilterColumns, setGlobalFilterColumns] = useState<string>(
     "id,title,description"
   );
@@ -52,7 +47,8 @@ const MyRecipeContainer = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
     queryFn: async ({ pageParam }) => {
       const fn = await getList<Recipe>({
         model: "Recipe",
-        relations: "user",
+        relations: "user&meta&comments",
+        with_trashed: true,
         ...generateListQueryParams({
           pagination: { pageSize: 20, pageIndex: pageParam as number },
           globalFilter,
@@ -77,45 +73,21 @@ const MyRecipeContainer = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
       return [...acc, ...page.rows];
     }, []) || [];
 
+  const searchRef = useRef<HTMLInputElement>(null);
+
   return (
     <Box className={cn("", className)} {...boxProps}>
       <Text className="font-zzz text-lg">{t("my_recipe_title")}</Text>
-      <form
+      <RecipeFilter
+        ref={searchRef}
         onSubmit={(e) => {
           e.preventDefault();
-
-          setGlobalFilter(q);
           queryClient.invalidateQueries({
-            queryKey: recipeKeys.list({
-              globalFilter,
-              globalFilterColumns,
-              columnFilters,
-            }),
+            queryKey: recipeKeys.lists(),
           });
+          setGlobalFilter(searchRef.current?.value || "");
         }}
-      >
-        <TextInput
-          classNames={{
-            root: "my-0 xs:my-4",
-            input: "rounded-full",
-          }}
-          size="md"
-          value={q || ""}
-          onChange={(event) => setQ(event.currentTarget.value)}
-          placeholder={tCommon("search_placeholder")}
-          rightSection={
-            <ActionIcon
-              aria-label="Search recipe"
-              id="search-recipe-btn"
-              size="md"
-              radius="xl"
-              type="submit"
-            >
-              <IconSearch size={16} />
-            </ActionIcon>
-          }
-        />
-      </form>
+      />
       <InfiniteScroll
         loadMore={() => fetchNextPage()}
         hasMore={hasNextPage}
