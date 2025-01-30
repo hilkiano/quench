@@ -42,7 +42,7 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
 
     return (
       <Box {...props}>
-        <Center className="flex flex-col gap-4 h-screen py-6 mb-6">
+        <Center className="flex flex-col gap-4 h-screen py-6">
           <Image
             src={image}
             alt="logo"
@@ -50,7 +50,7 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
             height={isMobile ? 140 : 200}
             className="opacity-50"
           />
-          <div className="flex flex-col gap-4 ">
+          {/* <div className="flex flex-col gap-4 ">
             <Text className="text-2xl md:text-3xl font-zzz break-all">
               {t.rich("header", {
                 user: userData?.user.email || "Guest",
@@ -64,8 +64,8 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
             <Text className="text-3xl md:text-4xl font-zzz -mt-2">
               {t("subheader")}
             </Text>
-          </div>
-          <div className="flex flex-col gap-4 mt-8">
+          </div> */}
+          <div className="flex flex-col gap-4 mt-8 mb-4">
             <Card
               component={Link}
               href="/recipe/list"
