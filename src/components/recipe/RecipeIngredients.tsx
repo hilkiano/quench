@@ -22,6 +22,7 @@ const RecipeIngredients = forwardRef<
       <Accordion
         variant="separated"
         classNames={{ item: "rounded-xl bg-neutral-100 dark:bg-neutral-900" }}
+        defaultValue="0"
       >
         <Accordion.Item key={0} value={"0"}>
           <Accordion.Control>

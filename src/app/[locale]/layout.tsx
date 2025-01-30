@@ -16,6 +16,31 @@ import UserProvider from "@/libs/user.provider";
 import { ModalsProvider } from "@mantine/modals";
 import { headers } from "next/headers";
 import { Toaster } from "sonner";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Goose Coffee",
+  description: "Goose Coffee",
+  generator: "Next.js",
+  manifest: "/manifest.json",
+  keywords: ["goose-coffee", "goose"],
+  authors: [
+    {
+      name: "hilkiano",
+      url: "https://www.linkedin.com/in/hilkia-nohansen/",
+    },
+  ],
+  icons: [
+    {
+      rel: "apple-touch-icon",
+      url: "images/black/android/android-launchericon-144-144.png",
+    },
+    {
+      rel: "icon",
+      url: "images/black/android/android-launchericon-144-144.png",
+    },
+  ],
+};
 
 export default async function RootLayout({
   children,

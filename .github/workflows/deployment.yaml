@@ -1,0 +1,45 @@
+name: Quench FE CICD
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  job_1:
+    name: Build Quench FE
+    runs-on: self-hosted
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        id: node_modules
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ steps.node.outputs.NODE_VERSION }}
+      - name: NPM Install
+        run: pnpm install
+      - name: NPM Build
+        run: pnpm run build
+      - name: Copy .env
+        env:
+          DOT_ENV: ${{ secrets.DOT_ENV }}
+        run: |
+          rm -f .env
+          touch .env
+          echo "${DOT_ENV// /}" | base64 --decode > .env
+      - name: Restart NGINX
+        run: echo kiano | sudo -S service nginx restart
+      - name: Stop PM quench_fe
+        run: pm2 stop quench_fe
+      - name: Run Process Manager
+        run: pm2 start ecosystem.config.js
+      - name: Save PM
+        run: pm2 save
