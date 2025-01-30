@@ -1,9 +1,9 @@
 {
     "name": "Goose Coffee",
-    "short_name": "goose-coffee",
+    "short_name": "",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "display": "natural",
+    "display": "standalone",
     "orientation": "any",
     "scope": "/",
     "start_url": "/",
