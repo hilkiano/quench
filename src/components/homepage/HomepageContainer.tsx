@@ -42,7 +42,7 @@ const HomepageContainer = forwardRef<HTMLDivElement, BoxProps>(
 
     return (
       <Box {...props}>
-        <Center className="flex flex-col gap-4 h-screen py-6">
+        <Center className="flex flex-col gap-4 h-screen py-6 mb-6">
           <Image
             src={image}
             alt="logo"
