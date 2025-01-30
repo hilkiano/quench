@@ -62,6 +62,11 @@ export default async function RootLayout({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width; viewport-fit=cover"
         />
+        <meta name="theme-color" content="#ffffff" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body
