@@ -2,11 +2,11 @@
     "name": "Goose Coffee",
     "short_name": "",
     "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "fullscreen",
+    "background_color": "black-translucent",
+    "display": "standalone",
     "orientation": "any",
     "scope": "/",
-    "start_url": "/",
+    "start_url": "/?standalone=true",
     "icons": [
         {
             "src": "images/black/android/android-launchericon-48-48.png",
